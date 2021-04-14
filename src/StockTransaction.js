@@ -25,7 +25,10 @@ function StockTransaction({
 }
 
 StockTransaction.propTypes = {
-  //waitingToPlayAgainState: PropTypes.number.isRequired,
+  transaction_mode: PropTypes.string.isRequired,
+  user_id: PropTypes.number.isRequired,
+  ticker_symbol: PropTypes.string.isRequired,
+  display_screen_func: PropTypes.func.isRequired
 };
 
 export default StockTransaction;
