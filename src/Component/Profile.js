@@ -6,6 +6,8 @@ import './Profile.css';
 
 function Portfolio(){
     
+    
+    //Added this 
     const [userState, setUserState] = useState(false);
     const userName = "Parth";
     const userPortfolio = {
