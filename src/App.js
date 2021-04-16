@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 // import logo from './logo.svg';
 import './App.css';
 import { Profile } from './';
@@ -6,6 +7,16 @@ function App() {
   return (
     <div className="App">
       <Profile />
+=======
+import './App.css';
+import io from 'socket.io-client';
+
+export const socket = io(); 
+
+function App() {
+  return (
+    <div>
+>>>>>>> 795075bf9ab8cf44ffee3b3d8b7c6f13e2c24c9e
     </div>
   );
 }
