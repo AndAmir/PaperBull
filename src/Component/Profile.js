@@ -1,6 +1,7 @@
 import { useState } from 'react';
 import io from 'socket.io-client';
 import './Profile.css';
+import { UserProfile }  from './';
 
 const socket = io();
 
@@ -16,8 +17,7 @@ function Portfolio(){
         'GME'  : {'stocksOwned': 70, 'averagePrice': 89.5},
         'NIO'  : {'stocksOwned': 90, 'averagePrice': 59.5}
     };
-    const cashBalance = 4500;
-    const totalAssets = 9000;
+
     
     function goToInvestingPage(){
         if(userState){
@@ -30,12 +30,15 @@ function Portfolio(){
 
     return (
         <div>
-            {(userState) ? (<h1> Go to Portfolio Page </h1>) : (
+            <div>  
+                <UserProfile />
+            </div>
+            <div>
+            {(userState) ? (
+                <h1> GO TO PORTFOLIO </h1>
+            ) : (
                 <div>
-                    <div className="userBalance">
-                        <h4> Total Assets: {totalAssets} </h4>
-                        <h4> Cash Balance: {cashBalance} </h4>
-                    </div>
+                    
                     <div className = "userPortfolio">
                         <table>
                             <thead>
@@ -61,6 +64,7 @@ function Portfolio(){
                     </div>
                 </div>
             )}
+            </div>
             <div className="startInvesting">
                         <button className="startInvestingButton" type="submit" onClick={goToInvestingPage}> Let's Start Investing </button>
             </div>
