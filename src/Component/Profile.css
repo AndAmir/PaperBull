@@ -9,10 +9,8 @@ tfoot {
     color: #fff;
 }
 
-.userBalance{
-    float: right;
-    clear: both;
-    padding-left: 100px;
+.profile{
+    padding: 10px;
 }
 
 

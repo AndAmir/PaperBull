@@ -33,7 +33,7 @@ function Portfolio(){
             <div>  
                 <UserProfile />
             </div>
-            <div>
+            <div className = "profile">
             {(userState) ? (
                 <h1> GO TO PORTFOLIO </h1>
             ) : (
