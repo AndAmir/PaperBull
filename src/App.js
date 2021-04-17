@@ -25,20 +25,31 @@ function App() {
       
       
       return (
+      <div className="wrapper-input">
         <div>
           <input type="text" ref={inputUser} placeholder="username" required />
-          <button type="button" onClick={onButtonClick}>Log In</button>
+          <div style={{ paddingTop: 10 }}>
+            <button type="button" onClick={onButtonClick}>
+              <h3>Log In</h3>
+            </button>
+          </div>
         </div>
+      </div>
       );
       
       
     }
     else{
       return (
-        <>
-        <h1>Username: {thisUser}</h1>
-        <button onClick = {logout}> Log Out </button>
-        </>
+        <div className='wrapper'>
+          <div>
+            <h1>Hello {thisUser}</h1>
+            <h3>Let's start investing</h3>
+          </div>
+          <div style={{ paddingTop: 10 }}>
+            <button onClick = {logout}><h3>Log Out </h3></button>
+          </div>
+        </div>
         )
     }
     
