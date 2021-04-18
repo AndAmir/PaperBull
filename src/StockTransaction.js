@@ -19,11 +19,13 @@ export function StockTransaction({
   }) {
   const [valueOfStock, updateStockValue] = useState(NOT_AVALIABLE_NUM_CONSTANT);
   const [amountOfStockOwned, updateAmountOfStockOwned] = useState(NOT_AVALIABLE_NUM_CONSTANT);
-  const [moneyDeltaValue, updateMoneyDelta] = useState(NOT_AVALIABLE_NUM_CONSTANT);
+  
+  // TODO: Implement this
+  const [maxStockInTransaction, changeMax] = useState(1000);
   
   const [pollTick, pollTickUpdater] = useState(false);
   
-  const [quanityOfStocks, changeQuanityOfStocks] = useState(1);
+  const [quantityOfStocks, changeQuanityOfStocks] = useState(0);
   
   const headerText = transactionMode;
   const valueOfStockStr = `$${valueOfStock.toFixed(2)}`;
@@ -32,12 +34,27 @@ export function StockTransaction({
     `Quantity of stock to ${transactionMode.toLowerCase()}`;
   const quantityOfStockInput = useRef(null);
   function onQuanityOfStocksChange() {
-    changeQuanityOfStocks(quantityOfStockInput.value);
+    const valueInInputField = quantityOfStockInput.current.value;
+    var validatedValue = parseInt(valueInInputField);
+    if (isNaN(validatedValue)) {
+      validatedValue = 0;
+    }
+    else if (valueInInputField < 0) {
+      validatedValue = 1;
+      quantityOfStockInput.current.value = validatedValue;
+    } else if (valueInInputField > maxStockInTransaction) {
+      validatedValue = maxStockInTransaction;
+      quantityOfStockInput.current.value = validatedValue;
+    }
+    quantityOfStockInput.current.value = validatedValue;
+    changeQuanityOfStocks(validatedValue);
   }
 
   const moneyDeltaStr = `Money ${transactionMode === "Buy"? "Lost": "Gained"}`;
   const moneyDeltaValueStr = 
-    `${transactionMode === "Buy"? "-": "+"} $${valueOfStock.toFixed(2)}`;
+    `${transactionMode === "Buy"? "-": "+"} $${
+        (valueOfStock * quantityOfStocks).toFixed(2)
+    }`;
   
   const confirmText = `Confirm ${transactionMode}`;
   
@@ -82,7 +99,11 @@ export function StockTransaction({
               <input
                 ref={quantityOfStockInput}
                 type="number"
-                oninput={onQuanityOfStocksChange}/> 
+                placeholder="0"
+                min="0"
+                max={maxStockInTransaction}
+                step="1"
+                onInput={onQuanityOfStocksChange}/> 
             </td>
           </tr>
           <tr class="moneyDelta">
