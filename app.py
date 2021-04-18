@@ -50,6 +50,10 @@ def poll_stock(data):
 @socketio.on('requestUserStockInfo')
 def request_user_stock_info(data):
     return stock_transaction.request_user_stock_info_implementation(data, db)
+    
+@socketio.on('processTransaction')
+def process_transaction(data):
+    return stock_transaction.process_transaction_implementation(data, db)
 
 if __name__ == "__main__":
     socketio.run(
