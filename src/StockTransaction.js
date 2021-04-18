@@ -35,7 +35,7 @@ export function StockTransaction({
   const quantityOfStockInput = useRef(null);
   function onQuanityOfStocksChange() {
     const valueInInputField = quantityOfStockInput.current.value;
-    var validatedValue = parseInt(valueInInputField);
+    let validatedValue = parseInt(valueInInputField);
     if (isNaN(validatedValue)) {
       validatedValue = 0;
     }
