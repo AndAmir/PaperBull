@@ -63,7 +63,13 @@ export function StockTransaction({
   }
   
   // Run on mount
-  useEffect(() => {}, []);
+  useEffect(() => {
+    socket.emit("requestUserStockInfo", 
+    {"ticker_symbol" : tickerSymbol, "user_id" : userId}, 
+    (response) => {
+      updateAmountOfStockOwned(response.quantity);
+    });
+  }, []);
   
   // Refreshing Stock Price
   useEffect(() => {
