@@ -8,7 +8,7 @@ export const STOCK_TRANSACTION_MODES = { buy: "Buy", sell: "Sell"};
 
 const NOT_AVALIABLE_NUM_CONSTANT = -1;
 
-const SECONDS_TILL_POLL_SERVER = 1.25;
+const SECONDS_TILL_POLL_SERVER = 8;
 
 
 export function StockTransaction({
@@ -74,10 +74,18 @@ export function StockTransaction({
   // Refreshing Stock Price
   useEffect(() => {
     socket.emit("pollStock", {"ticker_symbol" : tickerSymbol} , (response) => {
-      updateStockValue(response[tickerSymbol]);
+      if (!("error" in response)) {
+        updateStockValue(response[tickerSymbol]);
+      } else {
+        console.log(`Couldn't get Stock Data From Server. Error(${response.error})`)
+      }
     });
     
-    const timeoutReference = setTimeout(componentTick, SECONDS_TILL_POLL_SERVER * 1000);
+    // After we centralize API Usage this is not needed
+    const temporaryRandomOffset = (Math.random() * 10 - 5);
+    
+    const timeoutReference = 
+      setTimeout(componentTick, (SECONDS_TILL_POLL_SERVER + temporaryRandomOffset) * 1000);
     
     // Clean up function
     return () => {

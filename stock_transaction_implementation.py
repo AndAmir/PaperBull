@@ -1,15 +1,28 @@
 import random
 import models
 
+# TODO: We need to centralize API usage
+import stockquotes
+
 
 class ErrorMessages:
     INVALID_USER = "Invalid User"
     INVALID_REQUEST = "Invalid Request"
+    INVALID_STOCK = "Invalid Stock"
 
 
 def poll_stock_implementation(data):
+    response = {}
     stock = data["ticker_symbol"]
-    return {stock: random.randint(0, 100)}
+    
+    try:
+        stock_data = stockquotes.Stock(stock)
+        response[stock] = stock_data.current_price
+        print(response[stock])
+    except stockquotes.StockDoesNotExistError:
+        response["error"] = ErrorMessages.INVALID_STOCK
+    
+    return response
 
 
 def request_user_stock_info_implementation(data, db):
