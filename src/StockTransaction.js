@@ -6,16 +6,22 @@ import { socket } from "./App.js";
 
 export const STOCK_TRANSACTION_MODES = { buy: "Buy", sell: "Sell"};
 
+const NOT_AVALIABLE_NUM_CONSTANT = -1;
+
+const SECONDS_TILL_POLL_SERVER = 1.25;
+
+
 export function StockTransaction({
     transactionMode, 
     userId, 
-    tickerSymbol, 
-    display_screen_func
+    tickerSymbol,
+    displayComponentFunc
   }) {
-  //const [isAfterMatchVisible, changeAfterMatchVisibility] = useState(false);
-  const [valueOfStock, updateStockValue] = useState(0.00);
-  const [amountOfStockOwned, updateAmountOfStockOwned] = useState(0);
-  const [moneyDeltaValue, updateMoneyDelta] = useState(0.00);
+  const [valueOfStock, updateStockValue] = useState(NOT_AVALIABLE_NUM_CONSTANT);
+  const [amountOfStockOwned, updateAmountOfStockOwned] = useState(NOT_AVALIABLE_NUM_CONSTANT);
+  const [moneyDeltaValue, updateMoneyDelta] = useState(NOT_AVALIABLE_NUM_CONSTANT);
+  
+  const [pollTick, pollTickUpdater] = useState(false);
   
   const headerText = transactionMode;
   const valueOfStockStr = `$${valueOfStock.toFixed(2)}`;
@@ -29,10 +35,25 @@ export function StockTransaction({
   
   const confirmText = `Confirm ${transactionMode}`;
   
+  function componentTick() {
+    pollTickUpdater((prevValue) => {return !prevValue});
+  }
+  
+  // Run on mount
+  useEffect(() => {}, []);
+  
+  // Refreshing Stock Price
   useEffect(() => {
-    //socket.on("afterMatchReport", (data) => {});
-  }, []);
-
+    console.log('run');
+    socket.emit("pollStock", {"ticker_symbol" : tickerSymbol} , (response) => {
+      console.log(response);
+      updateStockValue(response[tickerSymbol]);
+    });
+    
+    setTimeout(componentTick, SECONDS_TILL_POLL_SERVER * 1000);
+  }, [pollTick])
+  
+  
   return (
     <div class="stockTransactionComponent">
       <div class="stockTransactionInnerDiv">
@@ -65,5 +86,5 @@ StockTransaction.propTypes = {
   transactionMode: PropTypes.string.isRequired,
   userId: PropTypes.number.isRequired,
   tickerSymbol: PropTypes.string.isRequired,
-  display_screen_func: PropTypes.func.isRequired
+  displayComponentFunc: PropTypes.func.isRequired
 };
