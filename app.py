@@ -64,7 +64,7 @@ def on_login(data):
 
 def add_user(user):
     """Helper function to add a user into database"""
-    new_user = models.USERS(username=user, cash_balance=100)
+    new_user = models.USERS(username=user, cash_balance=10000)
     db.session.add(new_user)
     db.session.commit()
     return True
