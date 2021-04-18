@@ -1,3 +1,4 @@
+"""Flask Backend"""
 import os
 from flask import Flask, send_from_directory, json
 from flask_socketio import SocketIO
@@ -30,16 +31,19 @@ socketio = SocketIO(
 @APP.route('/', defaults={"filename": "index.html"})
 @APP.route('/<path:filename>')
 def index(filename):
+    """Default filename function"""
     return send_from_directory('./build', filename)
 
 # When a client connects from this Socket connection, this function is run
 @socketio.on('connect')
 def on_connect():
+    """When a client connects from this Socket connection, this function is run"""
     print('User connected!')
 
 # When a client disconnects from this Socket connection, this function is run
 @socketio.on('disconnect')
 def on_disconnect():
+    """When a client disconnects from this Socket connection, this function is run"""
     print('User disconnected!')
 
 @socketio.on('login')
@@ -53,7 +57,7 @@ def on_login(data):
     if not exists:
         added = add_user(data['currentUser'])
         print("Added a new user")
-    socketio.emit('login', {'added' : True},
+    socketio.emit('login', {'added' : added},
                   broadcast=True,
                   include_self=True)
     return True
