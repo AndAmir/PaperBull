@@ -27,12 +27,24 @@ export function StockTransaction({
   
   const [quantityOfStocks, changeQuanityOfStocks] = useState(0);
   
+  const [processingTransaction, changeProcessingTransaction] = useState(false);
+  
+  const shouldComponentBeInteractable = 
+    valueOfStock !== NOT_AVALIABLE_NUM_CONSTANT &&
+    amountOfStockOwned !== NOT_AVALIABLE_NUM_CONSTANT &&
+    !processingTransaction;
+  
+  // Header
   const headerText = transactionMode;
+  
+  // Stock Value
   const valueOfStockStr = `$${valueOfStock.toFixed(2)}`;
   
+  // Stock Quantity Selection
   const amountofStockPrompStr = 
     `Quantity of stock to ${transactionMode.toLowerCase()}`;
   const quantityOfStockInput = useRef(null);
+  
   function onQuanityOfStocksChange() {
     const valueInInputField = quantityOfStockInput.current.value;
     let validatedValue = parseInt(valueInInputField);
@@ -50,28 +62,52 @@ export function StockTransaction({
     changeQuanityOfStocks(validatedValue);
   }
 
+  // Money Delta
   const moneyDeltaStr = `Money ${transactionMode === "Buy"? "Lost": "Gained"}`;
   const moneyDeltaValueStr = 
     `${transactionMode === "Buy"? "-": "+"} $${
         (valueOfStock * quantityOfStocks).toFixed(2)
     }`;
   
+  
+  // Confirm Button
   const confirmText = `Confirm ${transactionMode}`;
+  function attemptTransaction() {
+    changeProcessingTransaction(true);
+    socket.emit("processTransaction", 
+    {"ticker_symbol" : tickerSymbol, "user_id" : userId, "quantity" : quantityOfStocks, "transaction_mode" : transactionMode}, 
+    (response) => {
+      changeProcessingTransaction(false);
+      if ("error" in response) {
+        console.log(`Transaction Failed. Error(${response.error})`);
+        return;
+      }
+      
+      updateQuantityOwned();
+      for (const [key, value] of Object.entries(response)) {
+        console.log(key, value);
+      }
+    });
+  }
   
   function componentTick() {
     pollTickUpdater((prevValue) => {return !prevValue});
   }
   
-  // Run on mount
-  useEffect(() => {
+  function updateQuantityOwned() {
     socket.emit("requestUserStockInfo", 
     {"ticker_symbol" : tickerSymbol, "user_id" : userId}, 
     (response) => {
       updateAmountOfStockOwned(response.quantity);
     });
+  }
+  
+  // Run on mount
+  useEffect(() => {
+    updateQuantityOwned()
   }, []);
   
-  // Refreshing Stock Price
+  // Refreshing Stock Price (Run on mount too)
   useEffect(() => {
     socket.emit("pollStock", {"ticker_symbol" : tickerSymbol} , (response) => {
       if (!("error" in response)) {
@@ -112,6 +148,7 @@ export function StockTransaction({
             <td class="rightAlign"> 
               <input
                 ref={quantityOfStockInput}
+                disabled={!shouldComponentBeInteractable}
                 type="number"
                 placeholder="0"
                 min="0"
@@ -125,7 +162,16 @@ export function StockTransaction({
             <td class="rightAlign"> {moneyDeltaValueStr} </td>
           </tr>
         </table>
-        <div class="confirmButton"> {confirmText} </div>
+        {
+        shouldComponentBeInteractable &&
+        quantityOfStocks > 0 &&
+        <div 
+          class="confirmButton"
+          onClick={attemptTransaction}
+          > 
+          {confirmText}
+        </div>
+        }
       </div>
     </div>
   );

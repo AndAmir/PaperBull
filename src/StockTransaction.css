@@ -40,11 +40,21 @@
     align-items: center;
     width: 30%;
     height: 15%;
-    background: lightblue;
+    background: #90caf9;
+    -webkit-touch-callout: none;
+    -webkit-user-select: none;
+    -khtml-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+    user-select: none;
 }
 
-.confirmButton::after {
+.confirmButton:after {
   content: "";
   clear: both;
   display: table;
+}
+
+.confirmButton:hover {
+ background: #64b5f6;
 }
