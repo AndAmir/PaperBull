@@ -1,0 +1,8 @@
+stockquotes
+beautifulsoup4
+lxml
+Flask
+flask_socketio
+psycopg2
+flask_sqlalchemy
+python-dotenv
