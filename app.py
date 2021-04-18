@@ -42,9 +42,35 @@ def on_connect():
 def on_disconnect():
     print('User disconnected!')
 
+@socketio.on('login')
+def on_login(data):
+    """Occurs when user logs in"""
+    print("Something Happened")
+    print(str(data))
+    print(data['currentUser'])
+    exists = bool(
+        models.USERS.query.filter_by(username=data['currentUser']).first())
+    if not exists:
+        added = add_user(data['currentUser'])
+        print("Added a new user")
+    socketio.emit('login', {'added' : True},
+                  broadcast=True,
+                  include_self=True)
+    return True
+
+def add_user(user):
+    """Helper function to add a user into database"""
+    new_user = models.USERS(username=user, cash_balance=100)
+    db.session.add(new_user)
+    db.session.commit()
+    return True
+
+
+
 if __name__ == "__main__":
     socketio.run(
         APP,
         host=os.getenv('IP', '0.0.0.0'),
         port=8081 if os.getenv('C9_PORT') else int(os.getenv('PORT', 8081)),
+        debug=True,
     )

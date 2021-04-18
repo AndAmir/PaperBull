@@ -1,4 +1,4 @@
-import React, { useState, useRef } from 'react';
+import React, { useState, useRef, useEffect } from 'react';
 import './App.css';
 import io from 'socket.io-client';
 
@@ -12,8 +12,17 @@ function App() {
     if (inputUser.current.value !== '') {
       const user = inputUser.current.value;
       updateUser(user);
+      socket.emit('login', { currentUser: user });
+      console.log('emitted');
     }
   }
+
+  useEffect(() => {
+    socket.on('login', (data) => {
+      console.log('login registered');
+      console.log(data.added);
+    });
+  }, []);
 
   function logout() {
     if (thisUser !== '') {
