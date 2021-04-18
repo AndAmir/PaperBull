@@ -46,6 +46,10 @@ def on_disconnect():
 @socketio.on('pollStock')
 def poll_stock(data):
     return stock_transaction.poll_stock_implementation(data)
+    
+@socketio.on('requestUserStockInfo')
+def request_user_stock_info(data):
+    return stock_transaction.request_user_stock_info_implementation(data, db)
 
 if __name__ == "__main__":
     socketio.run(
