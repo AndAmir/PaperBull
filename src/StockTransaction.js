@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useRef, useState, useEffect } from "react";
 import "./StockTransaction.css";
 import PropTypes from "prop-types";
 
@@ -23,12 +23,18 @@ export function StockTransaction({
   
   const [pollTick, pollTickUpdater] = useState(false);
   
+  const [quanityOfStocks, changeQuanityOfStocks] = useState(1);
+  
   const headerText = transactionMode;
   const valueOfStockStr = `$${valueOfStock.toFixed(2)}`;
   
   const amountofStockPrompStr = 
     `Quantity of stock to ${transactionMode.toLowerCase()}`;
-  
+  const quantityOfStockInput = useRef(null);
+  function onQuanityOfStocksChange() {
+    changeQuanityOfStocks(quantityOfStockInput.value);
+  }
+
   const moneyDeltaStr = `Money ${transactionMode === "Buy"? "Lost": "Gained"}`;
   const moneyDeltaValueStr = 
     `${transactionMode === "Buy"? "-": "+"} $${valueOfStock.toFixed(2)}`;
@@ -44,13 +50,16 @@ export function StockTransaction({
   
   // Refreshing Stock Price
   useEffect(() => {
-    console.log('run');
     socket.emit("pollStock", {"ticker_symbol" : tickerSymbol} , (response) => {
-      console.log(response);
       updateStockValue(response[tickerSymbol]);
     });
     
-    setTimeout(componentTick, SECONDS_TILL_POLL_SERVER * 1000);
+    const timeoutReference = setTimeout(componentTick, SECONDS_TILL_POLL_SERVER * 1000);
+    
+    // Clean up function
+    return () => {
+      clearTimeout(timeoutReference);
+    }
   }, [pollTick])
   
   
@@ -69,7 +78,12 @@ export function StockTransaction({
           </tr>
           <tr class="amountOfStocks">
             <td class="leftAlign"> {amountofStockPrompStr} </td>
-            <td class="rightAlign"> <input type="number" placeholder="0"/> </td>
+            <td class="rightAlign"> 
+              <input
+                ref={quantityOfStockInput}
+                type="number"
+                oninput={onQuanityOfStocksChange}/> 
+            </td>
           </tr>
           <tr class="moneyDelta">
             <td class="leftAlign"> {moneyDeltaStr} </td>
