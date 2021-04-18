@@ -43,6 +43,8 @@ export function StockTransaction({
   // Stock Quantity Selection
   const amountofStockPrompStr = 
     `Quantity of stock to ${transactionMode.toLowerCase()}`;
+    
+  const amountOfStockOwnedStr = `${amountOfStockOwned}`;
   const quantityOfStockInput = useRef(null);
   
   function onQuanityOfStocksChange() {
@@ -71,8 +73,12 @@ export function StockTransaction({
   
   
   // Confirm Button
-  const confirmText = `Confirm ${transactionMode}`;
+  const confirmText = processingTransaction? "Processing...": `Confirm ${transactionMode}`;
+  
   function attemptTransaction() {
+    if (!shouldComponentBeInteractable) {
+      return;
+    }
     changeProcessingTransaction(true);
     socket.emit("processTransaction", 
     {"ticker_symbol" : tickerSymbol, "user_id" : userId, "quantity" : quantityOfStocks, "transaction_mode" : transactionMode}, 
@@ -141,7 +147,7 @@ export function StockTransaction({
           </tr>
           <tr class="currentlyOwned">
             <td class="leftAlign"> Currently Owned </td>
-            <td class="rightAlign"> {amountOfStockOwned} </td>
+            <td class="rightAlign"> {amountOfStockOwnedStr} </td>
           </tr>
           <tr class="amountOfStocks">
             <td class="leftAlign"> {amountofStockPrompStr} </td>
@@ -162,13 +168,11 @@ export function StockTransaction({
             <td class="rightAlign"> {moneyDeltaValueStr} </td>
           </tr>
         </table>
-        {
-        shouldComponentBeInteractable &&
-        quantityOfStocks > 0 &&
-        <div 
+        {quantityOfStocks > 0 &&
+        <div
           class="confirmButton"
           onClick={attemptTransaction}
-          > 
+          >
           {confirmText}
         </div>
         }
