@@ -19,6 +19,7 @@ export function StockTransaction({
   }) {
   const [valueOfStock, updateStockValue] = useState(NOT_AVALIABLE_NUM_CONSTANT);
   const [amountOfStockOwned, updateAmountOfStockOwned] = useState(NOT_AVALIABLE_NUM_CONSTANT);
+  const [avgPriceForOwnedStocks, updateAvgPriceForOwnedStocks] = useState(NOT_AVALIABLE_NUM_CONSTANT);
   
   // TODO: Implement this
   const [maxStockInTransaction, changeMax] = useState(1000);
@@ -38,13 +39,21 @@ export function StockTransaction({
   const headerText = transactionMode;
   
   // Stock Value
-  const valueOfStockStr = `$${valueOfStock.toFixed(2)}`;
+  const valueOfStockStr = valueOfStock === NOT_AVALIABLE_NUM_CONSTANT?
+    "..." : `$${valueOfStock.toFixed(2)}`;
+  
+  
+  // Stock Quantity Owned
+  const amountOfStockOwnedStr = amountOfStockOwned === NOT_AVALIABLE_NUM_CONSTANT?
+    "..." : `${amountOfStockOwned}`;
+  const averageValueOfOwnedStocked = 
+    `${avgPriceForOwnedStocks !== NOT_AVALIABLE_NUM_CONSTANT?
+    `(Avg Value: $${avgPriceForOwnedStocks.toFixed(2)})` : ``}`
   
   // Stock Quantity Selection
   const amountofStockPrompStr = 
     `Quantity of stock to ${transactionMode.toLowerCase()}`;
     
-  const amountOfStockOwnedStr = `${amountOfStockOwned}`;
   const quantityOfStockInput = useRef(null);
   
   function onQuanityOfStocksChange() {
@@ -66,7 +75,9 @@ export function StockTransaction({
 
   // Money Delta
   const moneyDeltaStr = `Money ${transactionMode === "Buy"? "Lost": "Gained"}`;
-  const moneyDeltaValueStr = 
+  
+  const moneyDeltaValueStr = quantityOfStocks < 1?
+    `$${(0.0).toFixed(2)}`:
     `${transactionMode === "Buy"? "-": "+"} $${
         (valueOfStock * quantityOfStocks).toFixed(2)
     }`;
@@ -105,6 +116,11 @@ export function StockTransaction({
     {"ticker_symbol" : tickerSymbol, "user_id" : userId}, 
     (response) => {
       updateAmountOfStockOwned(response.quantity);
+      if ("avg_price" in response) {
+        updateAvgPriceForOwnedStocks(response.avg_price);
+      } else {
+        updateAvgPriceForOwnedStocks(NOT_AVALIABLE_NUM_CONSTANT);
+      }
     });
   }
   
@@ -147,7 +163,11 @@ export function StockTransaction({
           </tr>
           <tr class="currentlyOwned">
             <td class="leftAlign"> Currently Owned </td>
-            <td class="rightAlign"> {amountOfStockOwnedStr} </td>
+            <td class="rightAlign"> 
+              {amountOfStockOwnedStr}
+              <br/>
+              {averageValueOfOwnedStocked}
+            </td>
           </tr>
           <tr class="amountOfStocks">
             <td class="leftAlign"> {amountofStockPrompStr} </td>
