@@ -38,6 +38,11 @@ export function StockTransaction({
   // Header
   const headerText = transactionMode;
   
+  // Close Button
+  function requestComponentClose() {
+    displayComponentFunc(false);
+  }
+  
   // Stock Value
   const valueOfStockStr = valueOfStock === NOT_AVALIABLE_NUM_CONSTANT?
     "..." : `$${valueOfStock.toFixed(2)}`;
@@ -161,6 +166,7 @@ export function StockTransaction({
   
   return (
     <div class="stockTransactionComponent">
+      <div class="closeButton" onClick={requestComponentClose}> X </div>
       <div class="stockTransactionInnerDiv">
         <div class="headerText"> {headerText} </div>
         <table class="stockTransactionTable">
