@@ -5,8 +5,10 @@ import { socket } from './App';
 
 
 // Remove this later
-const clientID = '386644716433-1ee1beupucvfa35vf9ubp0q8uacsqttp.apps.googleusercontent.com';
-
+// const clientID = '386644716433-1ee1beupucvfa35vf9ubp0q8uacsqttp.apps.googleusercontent.com';
+const { REACT_APP_GIT_HASH, REACT_APP_MY_ENV, NODE_ENV } = process.env;
+const clientID =
+  NODE_ENV === 'production' ? window.API_URL : process.env.REACT_APP_GOOGLE_CLIENT;
 
 export function Login() {
 

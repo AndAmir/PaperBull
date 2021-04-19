@@ -39,5 +39,8 @@
     "bufferutil": "^4.0.3",
     "utf-8-validate": "^5.0.4"
   },
-  "proxy": "http://localhost:8081/"
+  "proxy": "http://localhost:8081/",
+  "devDependencies": {
+    "dotenv": "^8.2.0"
+  }
 }
