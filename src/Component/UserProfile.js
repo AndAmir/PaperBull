@@ -11,6 +11,12 @@ function UserProfile({totalAssetsOwned, totalInvested}) {
         cashBal = cashBal.toFixed(2);
         return cashBal;
     }
+    
+    function getPercentChange(){
+        let percentChange = ((totalAssetsOwned - DEFUALT_STARTING_AMOUNT) / DEFUALT_STARTING_AMOUNT) * 100;
+        percentChange = percentChange.toFixed(2);
+        return percentChange;
+    }
     return (
         <div className = "userProfileHeader">
             <div className = "profileImage">
@@ -20,7 +26,7 @@ function UserProfile({totalAssetsOwned, totalInvested}) {
                 <p>Parth Patel</p>
             </div>
             <div className="userBalance">
-                <h4> Total Assets: ${totalAssetsOwned} </h4>
+                <h4> Total Assets: ${totalAssetsOwned} ({getPercentChange()}%) </h4>
                 <h4> Cash Balance: ${getCashBalance()} </h4>
             </div>
         </div>

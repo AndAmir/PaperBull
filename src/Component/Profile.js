@@ -68,7 +68,6 @@ function Portfolio(){
                 <h1> GO TO PORTFOLIO </h1>
             ) : (
                 <div>
-                    
                     <div className = "userPortfolio">
                         <table>
                             <thead>
