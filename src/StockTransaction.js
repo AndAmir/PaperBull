@@ -48,7 +48,7 @@ export function StockTransaction({
     "..." : `${amountOfStockOwned}`;
   const averageValueOfOwnedStocked = 
     `${avgPriceForOwnedStocks !== NOT_AVALIABLE_NUM_CONSTANT?
-    `(Avg Value: $${avgPriceForOwnedStocks.toFixed(2)})` : ``}`
+    `Average Value: $${avgPriceForOwnedStocks.toFixed(2)}` : ``}`
   
   // Stock Quantity Selection
   const amountofStockPrompStr = 
@@ -180,6 +180,7 @@ export function StockTransaction({
             <td class="leftAlign"> {amountofStockPrompStr} </td>
             <td class="rightAlign"> 
               <input
+                class="inputBox"
                 ref={quantityOfStockInput}
                 disabled={!shouldComponentBeInteractable}
                 type="number"
