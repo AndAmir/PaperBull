@@ -1,71 +1,36 @@
-import React, { useState, useRef, useEffect } from 'react';
+import React, { useState, useEffect } from 'react';
 import './App.css';
 import io from 'socket.io-client';
-import { Login } from './Login'
-import { Logout } from './Logout'
+import { Login } from './Login'; // eslint-disable-line
+import { Logout } from './Logout'; // eslint-disable-line
+// Disabled lienes because of a dependendency cycle; however, the login and logout components are
+// needed
 
 export const socket = io();
 
 function App() {
-  const [thisUser, updateUser] = useState(''); //thisUser variable contains user email
-  const [fullName, updateName] = useState(''); //fullName variable contains user's first and last name
-  
-  const inputUser = useRef('');
-
-  function onButtonClick() {
-    if (inputUser.current.value !== '') {
-      const user = inputUser.current.value;
-      updateUser(user);
-      socket.emit('login', { currentUser: user });
-      console.log('emitted');
-    }
-  }
+  const [thisUser, updateUser] = useState(''); // thisUser variable contains user email
+  const [fullName, updateName] = useState(''); // fullName variable contains user's first and last name
 
   useEffect(() => {
     socket.on('login', (data) => {
       console.log('login registered');
       console.log(data.added);
       console.log(data.name);
-      updateUser(data.user)
-      updateName(data.name)
+      updateUser(data.user);
+      updateName(data.name);
     });
   }, []);
-  
-    useEffect(() => {
+
+  useEffect(() => {
     socket.on('logout', (data) => {
       console.log('logout success');
       console.log(data.added);
       console.log(data.name);
-      updateUser(data.user)
-      updateName(data.name)
+      updateUser(data.user);
+      updateName(data.name);
     });
   }, []);
-
-
-  function logout() {
-    if (thisUser !== '') {
-      updateUser('');
-      updateName('');
-    }
-  }
-  
-  
-//   const handleLogin = async googleData => {
-//   const res = await fetch("/api/v1/auth/google", {
-//       method: "POST",
-//       body: JSON.stringify({
-//       token: googleData.tokenId
-//     }),
-//     headers: {
-//       "Content-Type": "application/json"
-//     }
-//   })
-//   const data = await res.json()
-//   // store returned user somehow
-// }
-  
-  
-  
 
   const hellotext = 'Hello ';
 
@@ -75,7 +40,7 @@ function App() {
         <div>
           <h1>Welcome to Paperbull</h1>
           <h3>Sign in with google</h3>
-          <Login/>
+          <Login />
         </div>
       </div>
     );
@@ -84,7 +49,7 @@ function App() {
   return (
     <div className="wrapper">
       <div>
-        
+
         <h1>
           {hellotext}
           {fullName}
@@ -93,7 +58,7 @@ function App() {
       </div>
       <div style={{ paddingTop: 10 }}>
 
-        <Logout/>
+        <Logout />
       </div>
     </div>
   );
