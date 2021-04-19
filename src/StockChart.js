@@ -8,6 +8,7 @@ const { CanvasJSChart } = CanvasJSReact;
 export function StockChart() {
   const [ticker, setTicker] = useState('');
   const [stockHistory, setStockHistory] = useState([]);
+  const [stockVolumeHistory, setStockVolumeHistory] = useState([]);
   // const [badTicker, setBadTicker] = useState(false);
   console.log('IM IN STOCKCHART', ticker);
 
@@ -15,6 +16,7 @@ export function StockChart() {
     socket.on('changeStockHistoryChart', (data) => {
       setTicker(data.ticker);
       setStockHistory([]);
+      setStockVolumeHistory([]);
       // setBadTicker(false);
       console.log('GETTING HISTORY', data.ticker);
       socket.emit('requestStockHistory',
@@ -25,16 +27,20 @@ export function StockChart() {
             setTicker('Invalid Ticker Symbol');
           } else {
             console.log('GOT RESPONSE', response);
-            Object.keys(response).forEach(
+            Object.keys(response.final).forEach(
               (date) => setStockHistory((prev) => (
-                [...prev, { x: new Date(date), y: response[date] }])),
+                [...prev, { x: new Date(date), y: response.final[date] }])),
             );
+            // Object.keys(response.volume).forEach(
+            //   (date) => setStockVolumeHistory((prev) => (
+            //     [...prev, { x: new Date(date), y: response.volume[date] }])),
+            // );
           }
         });
     });
   }, []);
   const options = {
-    theme: 'dark2', // "light1", "light2", "dark1", "dark2"
+    theme: 'light2', // "light1", "light2", "dark1", "dark2"
     animationEnabled: true,
     exportEnabled: true,
     zoomEnabled: true,
@@ -55,6 +61,10 @@ export function StockChart() {
       yValueFormatString: '$###0.00',
       xValueFormatString: 'MMMM DD',
       dataPoints: stockHistory,
+    },
+    {
+      type: 'line',
+      dataPoints: stockVolumeHistory,
     },
     ],
   };

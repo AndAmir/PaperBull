@@ -48,7 +48,7 @@ function App() {
     );
   }
   if (inSearchScreen) {
-    return (<StockSearch />);
+    return (<StockSearch userID={thisUser} />);
   }
   return (
     <div className="wrapper">
