@@ -2,7 +2,7 @@ import React, { useRef, useState, useEffect } from 'react';
 import './StockTransaction.css';
 import PropTypes from 'prop-types';
 
-import { socket } from './App.js';
+import { socket } from './App';
 
 export const STOCK_TRANSACTION_MODES = { buy: 'Buy', sell: 'Sell' };
 

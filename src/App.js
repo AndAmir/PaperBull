@@ -14,7 +14,7 @@ function App() {
       const user = inputUser.current.value;
       updateUser(user);
       socket.emit('login', { currentUser: user });
-      console.log('emitted');
+      // console.log('emitted');
     }
   }
 
@@ -63,6 +63,7 @@ function App() {
         onClick={() => {
           setInSearchScreen(true);
         }}
+        onKeyPress={(e) => e.key === 'Enter' && setInSearchScreen(true)}
         id="search_button"
         role="button"
         tabIndex={0}

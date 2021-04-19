@@ -1,47 +1,34 @@
 import React, { useEffect, useState } from 'react';
-import PropTypes from 'prop-types';
 import CanvasJSReact from './lib/canvasjs.react';
-import { socket } from './App.js';
+import { socket } from './App';
 // var CanvasJSReact = require('./canvasjs.react');
-const { CanvasJS } = CanvasJSReact;
+// const { CanvasJS } = CanvasJSReact;
 const { CanvasJSChart } = CanvasJSReact;
 
-export function StockChart(props) {
+export function StockChart() {
   const [ticker, setTicker] = useState('');
   const [stockHistory, setStockHistory] = useState([]);
-  const [gotHistory, setGotHistory] = useState(false);
-  const [badTicker, setBadTicker] = useState(false);
+  // const [badTicker, setBadTicker] = useState(false);
   console.log('IM IN STOCKCHART', ticker);
-  // if(!gotHistory){
-  //   console.log('GETTING HISTORY', ticker)
-  //   socket.emit('requestStockHistory',
-  //     { ticker },
-  //     (response) => {
-  //       console.log(response)
-  //       for (var date in response) {
-  //         setStockHistory((prev) => [...prev, { x: new Date(date), y: response[date] }]);
-  //       }
-  //     });
-  //   setGotHistory(true);
-  // }
 
   useEffect(() => {
     socket.on('changeStockHistoryChart', (data) => {
       setTicker(data.ticker);
       setStockHistory([]);
-      setBadTicker(false);
+      // setBadTicker(false);
       console.log('GETTING HISTORY', data.ticker);
       socket.emit('requestStockHistory',
         data.ticker,
         (response) => {
           if (response == null) {
-            setBadTicker(true);
+            // setBadTicker(true);
             setTicker('Invalid Ticker Symbol');
           } else {
             console.log('GOT RESPONSE', response);
-            for (var date in response) {
-              setStockHistory((prev) => [...prev, { x: new Date(date), y: response[date] }]);
-            }
+            Object.keys(response).forEach(
+              (date) => setStockHistory((prev) => (
+                [...prev, { x: new Date(date), y: response[date] }])),
+            );
           }
         });
     });
@@ -83,3 +70,4 @@ export function StockChart(props) {
     </div>
   );
 }
+export default StockChart;
