@@ -1,10 +1,16 @@
 import { useState } from 'react';
 import './UserProfile.css';
 
-function UserProfile() {
+function UserProfile({totalAssetsOwned, totalInvested}) {
     
-    const cashBalance = 4500;
-    const totalAssets = 9000;
+    const DEFUALT_STARTING_AMOUNT = 10000;
+    console.log(totalInvested);
+    
+    function getCashBalance(){
+        let cashBal = totalAssetsOwned - totalInvested;
+        cashBal = cashBal.toFixed(2);
+        return cashBal;
+    }
     return (
         <div className = "userProfileHeader">
             <div className = "profileImage">
@@ -14,8 +20,8 @@ function UserProfile() {
                 <p>Parth Patel</p>
             </div>
             <div className="userBalance">
-                <h4> Total Assets: {totalAssets} </h4>
-                <h4> Cash Balance: {cashBalance} </h4>
+                <h4> Total Assets: ${totalAssetsOwned} </h4>
+                <h4> Cash Balance: ${getCashBalance()} </h4>
             </div>
         </div>
     );

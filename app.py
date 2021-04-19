@@ -54,6 +54,11 @@ def request_user_stock_info(data):
 @socketio.on('processTransaction')
 def process_transaction(data):
     return stock_transaction.process_transaction_implementation(data, db)
+    
+@socketio.on('getCurrentPrice')
+def getCurrentPrice(data):
+    print(data)
+    socketio.emit('currentPrice', data)
 
 if __name__ == "__main__":
     socketio.run(
