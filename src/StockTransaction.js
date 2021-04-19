@@ -38,6 +38,11 @@ export function StockTransaction({
   // Header
   const headerText = transactionMode;
   
+  // Close Button
+  function requestComponentClose() {
+    displayComponentFunc(false);
+  }
+  
   // Stock Value
   const valueOfStockStr = valueOfStock === NOT_AVALIABLE_NUM_CONSTANT?
     "..." : `$${valueOfStock.toFixed(2)}`;
@@ -48,7 +53,7 @@ export function StockTransaction({
     "..." : `${amountOfStockOwned}`;
   const averageValueOfOwnedStocked = 
     `${avgPriceForOwnedStocks !== NOT_AVALIABLE_NUM_CONSTANT?
-    `(Avg Value: $${avgPriceForOwnedStocks.toFixed(2)})` : ``}`
+    `Average Value: $${avgPriceForOwnedStocks.toFixed(2)}` : ``}`
   
   // Stock Quantity Selection
   const amountofStockPrompStr = 
@@ -161,6 +166,7 @@ export function StockTransaction({
   
   return (
     <div class="stockTransactionComponent">
+      <div class="closeButton" onClick={requestComponentClose}> X </div>
       <div class="stockTransactionInnerDiv">
         <div class="headerText"> {headerText} </div>
         <table class="stockTransactionTable">
@@ -180,6 +186,7 @@ export function StockTransaction({
             <td class="leftAlign"> {amountofStockPrompStr} </td>
             <td class="rightAlign"> 
               <input
+                class="inputBox"
                 ref={quantityOfStockInput}
                 disabled={!shouldComponentBeInteractable}
                 type="number"
