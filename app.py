@@ -70,9 +70,9 @@ def on_login(data):
     if not exists:
         added = add_user(data['currentUser'])
         print("Added a new user")
-    socketio.emit('login', {'added' : added},
-                  broadcast=True,
-                  include_self=True)
+        socketio.emit('login', {'added' : added},
+                      broadcast=True,
+                      include_self=True)
     return True
 
 def add_user(user):

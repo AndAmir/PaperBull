@@ -30,6 +30,8 @@ function App() {
     }
   }
 
+  const hellotext = 'Hello ';
+
   if (thisUser === '') {
     return (
       <div className="wrapper-input">
@@ -49,7 +51,7 @@ function App() {
     <div className="wrapper">
       <div>
         <h1>
-          Hello
+          {hellotext}
           {thisUser}
         </h1>
         <h3>Let&#39;s start investing</h3>
