@@ -8,10 +8,10 @@ function UserProfile() {
     return (
         <div className = "userProfileHeader">
             <div className = "profileImage">
-                <img src="https://bit.ly/3uXo49F" alt=''/>
+                <img src="https://bit.ly/3tzk13c" alt=''/>
             </div>
             <div className="profileName">
-                <p className="name"> Parth Patel </p>
+                <p>Parth Patel</p>
             </div>
             <div className="userBalance">
                 <h4> Total Assets: {totalAssets} </h4>
