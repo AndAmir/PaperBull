@@ -7,8 +7,8 @@ import { Logout } from './Logout'
 export const socket = io();
 
 function App() {
-  const [thisUser, updateUser] = useState('');
-  const [fullName, updateName] = useState('');
+  const [thisUser, updateUser] = useState(''); //thisUser variable contains user email
+  const [fullName, updateName] = useState(''); //fullName variable contains user's first and last name
   
   const inputUser = useRef('');
 
