@@ -19,20 +19,43 @@ export function StockTransaction({
   }) {
   const [valueOfStock, updateStockValue] = useState(NOT_AVALIABLE_NUM_CONSTANT);
   const [amountOfStockOwned, updateAmountOfStockOwned] = useState(NOT_AVALIABLE_NUM_CONSTANT);
+  const [avgPriceForOwnedStocks, updateAvgPriceForOwnedStocks] = useState(NOT_AVALIABLE_NUM_CONSTANT);
   
   // TODO: Implement this
-  const [maxStockInTransaction, changeMax] = useState(1000);
+  const [maxStockInTransaction, changeMax] = useState(0);
   
   const [pollTick, pollTickUpdater] = useState(false);
   
   const [quantityOfStocks, changeQuanityOfStocks] = useState(0);
   
-  const headerText = transactionMode;
-  const valueOfStockStr = `$${valueOfStock.toFixed(2)}`;
+  const [processingTransaction, changeProcessingTransaction] = useState(false);
   
+  const shouldComponentBeInteractable = 
+    valueOfStock !== NOT_AVALIABLE_NUM_CONSTANT &&
+    amountOfStockOwned !== NOT_AVALIABLE_NUM_CONSTANT &&
+    !processingTransaction;
+  
+  // Header
+  const headerText = transactionMode;
+  
+  // Stock Value
+  const valueOfStockStr = valueOfStock === NOT_AVALIABLE_NUM_CONSTANT?
+    "..." : `$${valueOfStock.toFixed(2)}`;
+  
+  
+  // Stock Quantity Owned
+  const amountOfStockOwnedStr = amountOfStockOwned === NOT_AVALIABLE_NUM_CONSTANT?
+    "..." : `${amountOfStockOwned}`;
+  const averageValueOfOwnedStocked = 
+    `${avgPriceForOwnedStocks !== NOT_AVALIABLE_NUM_CONSTANT?
+    `(Avg Value: $${avgPriceForOwnedStocks.toFixed(2)})` : ``}`
+  
+  // Stock Quantity Selection
   const amountofStockPrompStr = 
     `Quantity of stock to ${transactionMode.toLowerCase()}`;
+    
   const quantityOfStockInput = useRef(null);
+  
   function onQuanityOfStocksChange() {
     const valueInInputField = quantityOfStockInput.current.value;
     let validatedValue = parseInt(valueInInputField);
@@ -50,35 +73,77 @@ export function StockTransaction({
     changeQuanityOfStocks(validatedValue);
   }
 
+  // Money Delta
   const moneyDeltaStr = `Money ${transactionMode === "Buy"? "Lost": "Gained"}`;
-  const moneyDeltaValueStr = 
+  
+  const moneyDeltaValueStr = quantityOfStocks < 1?
+    `$${(0.0).toFixed(2)}`:
     `${transactionMode === "Buy"? "-": "+"} $${
         (valueOfStock * quantityOfStocks).toFixed(2)
     }`;
   
-  const confirmText = `Confirm ${transactionMode}`;
+  
+  // Confirm Button
+  const confirmText = processingTransaction? "Processing...": `Confirm ${transactionMode}`;
+  
+  function attemptTransaction() {
+    if (!shouldComponentBeInteractable) {
+      return;
+    }
+    changeProcessingTransaction(true);
+    socket.emit("processTransaction", 
+    {"ticker_symbol" : tickerSymbol, "user_id" : userId, "quantity" : quantityOfStocks, "transaction_mode" : transactionMode}, 
+    (response) => {
+      changeProcessingTransaction(false);
+      if ("error" in response) {
+        console.log(`Transaction Failed. Error(${response.error})`);
+        return;
+      }
+      
+      quantityOfStockInput.current.value = 0;
+      updateQuantityOwned();
+      for (const [key, value] of Object.entries(response)) {
+        console.log(key, value);
+      }
+    });
+  }
   
   function componentTick() {
     pollTickUpdater((prevValue) => {return !prevValue});
   }
   
-  // Run on mount
-  useEffect(() => {
+  function updateQuantityOwned() {
     socket.emit("requestUserStockInfo", 
-    {"ticker_symbol" : tickerSymbol, "user_id" : userId}, 
+    {"ticker_symbol" : tickerSymbol, "user_id" : userId, "transaction_mode" : transactionMode}, 
     (response) => {
       updateAmountOfStockOwned(response.quantity);
+      if ("avg_price" in response) {
+        updateAvgPriceForOwnedStocks(response.avg_price);
+      } else {
+        updateAvgPriceForOwnedStocks(NOT_AVALIABLE_NUM_CONSTANT);
+      }
     });
+  }
+  
+  // Run on mount
+  useEffect(() => {
+    updateQuantityOwned()
   }, []);
   
-  // Refreshing Stock Price
+  // Refreshing Stock Price (Run on mount too)
   useEffect(() => {
-    socket.emit("pollStock", {"ticker_symbol" : tickerSymbol} , (response) => {
-      if (!("error" in response)) {
-        updateStockValue(response[tickerSymbol]);
-      } else {
-        console.log(`Couldn't get Stock Data From Server. Error(${response.error})`)
+    socket.emit("pollStock", 
+      {"ticker_symbol" : tickerSymbol, "user_id" : userId, "transaction_mode" : transactionMode}, 
+      (response) => {
+      if ("error" in response) {
+        updateStockValue(NOT_AVALIABLE_NUM_CONSTANT);
+        changeMax(0);
+        console.log(`Couldn't get Stock Data From Server. Error(${response.error})`);
+        return;
       }
+      
+      updateStockValue(response[tickerSymbol]);
+      changeMax(response.suggestive_max);
     });
     
     // After we centralize API Usage this is not needed
@@ -105,13 +170,18 @@ export function StockTransaction({
           </tr>
           <tr class="currentlyOwned">
             <td class="leftAlign"> Currently Owned </td>
-            <td class="rightAlign"> {amountOfStockOwned} </td>
+            <td class="rightAlign"> 
+              {amountOfStockOwnedStr}
+              <br/>
+              {averageValueOfOwnedStocked}
+            </td>
           </tr>
           <tr class="amountOfStocks">
             <td class="leftAlign"> {amountofStockPrompStr} </td>
             <td class="rightAlign"> 
               <input
                 ref={quantityOfStockInput}
+                disabled={!shouldComponentBeInteractable}
                 type="number"
                 placeholder="0"
                 min="0"
@@ -125,7 +195,14 @@ export function StockTransaction({
             <td class="rightAlign"> {moneyDeltaValueStr} </td>
           </tr>
         </table>
-        <div class="confirmButton"> {confirmText} </div>
+        {quantityOfStocks > 0 &&
+        <div
+          class="confirmButton"
+          onClick={attemptTransaction}
+          >
+          {confirmText}
+        </div>
+        }
       </div>
     </div>
   );

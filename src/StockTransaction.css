@@ -1,12 +1,12 @@
 .stockTransactionComponent {
   position: fixed;
-  width: min(80vh, 80vw);
-  height: min(80vh, 80vw);
+  width: 60vw;
+  height: 80vh;
   border: 1px solid;
   padding: min(3vh, 3vw);
-  bottom: 50;
-  left: 50;
   overflow: auto;
+  top: 7vh;
+  left: 17vw;
 }
 
 .stockTransactionInnerDiv {
@@ -21,16 +21,21 @@
 
 .headerText {
     text-align: center;
+    font-size: clamp(1rem, min(4.5vh, 4.5vw), 100px);
 }
 
 .leftAlign {
     text-align: left;
     margin-left: 10%;
+    font-size: clamp(1rem, min(3vh, 3vw), 50px);
+    width: 50%;
 }
 
 .rightAlign {
     text-align: right;
     margin-right: 10%;
+    font-size: clamp(1rem, min(3vh, 3vw), 50px);
+    width: 50%;
 }
 
 .confirmButton {
@@ -38,13 +43,23 @@
     display: flex;
     justify-content: center;
     align-items: center;
-    width: 30%;
+    width: 50%;
     height: 15%;
-    background: lightblue;
+    background: #90caf9;
+    -webkit-touch-callout: none;
+    -webkit-user-select: none;
+    -khtml-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+    user-select: none;
 }
 
-.confirmButton::after {
+.confirmButton:after {
   content: "";
   clear: both;
   display: table;
+}
+
+.confirmButton:hover {
+ background: #64b5f6;
 }
