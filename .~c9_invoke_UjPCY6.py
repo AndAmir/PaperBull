@@ -66,13 +66,9 @@ def process_transaction_implementation(data, db):
 
     # TODO: Add security when we have Google API Login
     user_id = int(data.get("user_id"))
-    quantity = int(data.get("quantity", -1))
+    quantity = int(data.get("quantity"))
     stock = data.get("ticker_symbol")
     mode = data.get("transaction_mode")
-    
-    if quantity <= 0:
-        response["error"] = ErrorMessages.INVALID_REQUEST
-        return response
 
     db_user_info = db.session.query(
         models.USERS).filter_by(username_id=user_id).first()
@@ -96,26 +92,13 @@ def process_transaction_implementation(data, db):
         avg_price = price_of_stock_or_none
 
         if db_prev_stock_info_or_none is not None:
-            db_prev_avg = db_prev_stock_info_or_none.avg_price
-            db_prev_quantity = db_prev_stock_info_or_none.quantity
-
-            total_quantity = db_prev_stock_info_or_none.quantity + quantity
-
-            avg_price = (avg_price * quantity +
-                         db_prev_avg * db_prev_quantity) / total_quantity
+            avg_price = (avg_price + db_prev_stock_info_or_none.avg_price) / 2
             db_prev_stock_info_or_none.avg_price = avg_price
-            db_prev_stock_info_or_none.quantity = total_quantity
-            
-            response["newStockAmount"] = total_quantity
+            db_prev_stock_info_or_none.quantity += quantity
         else:
-            new_stock_entry = models.STOCKS(username_id=user_id,
-                                            ticker=stock,
-                                            quantity=quantity,
-                                            avg_price=avg_price)
-            db.session.add(new_stock_entry)
-            
-            response["newStockAmount"] = quantity
-        
+            new_stock_entry = models.STOCKS(username_id=user_id, ticker=stock, quantity=quantity, avg_price)
+
+
         new_history_entry = models.HISTORY(
             username_id=user_id,
             date=now(),
@@ -125,7 +108,8 @@ def process_transaction_implementation(data, db):
             change_in_money=delta_of_transaction)
 
         db.session.add(new_history_entry)
-
+        db.session.commit()
+        
     elif mode == "Sell":
         if db_prev_stock_info_or_none is None or db_prev_stock_info_or_none.quantity < quantity:
             response["error"] = ErrorMessages.TRANS_LACK_STOCK
@@ -134,11 +118,9 @@ def process_transaction_implementation(data, db):
         db_user_info.cash_balance += delta_of_transaction
 
         if quantity == db_prev_stock_info_or_none.quantity:
-            db.session.delete(db_prev_stock_info_or_none)
-            response["newStockAmount"] = 0
+            db.session.delete(prev_quantity_or_zero)
         else:
-            db_prev_stock_info_or_none.quantity -= quantity
-            response["newStockAmount"] = db_prev_stock_info_or_none.quantity
+            prev_quantity_or_zero.quantity -= quantity
 
         new_history_entry = models.HISTORY(
             username_id=user_id,
@@ -149,12 +131,12 @@ def process_transaction_implementation(data, db):
             change_in_money=delta_of_transaction)
 
         db.session.add(new_history_entry)
+        db.session.commit()
     else:
         response["error"] = ErrorMessages.INVALID_REQUEST
         return response
-
+    
     # Any global Success Operations Here
-    db.session.commit()
     response["newBalance"] = db_user_info.cash_balance
 
     return response

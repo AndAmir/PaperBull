@@ -1,5 +1,6 @@
 """Flask Backend"""
 import os
+import stock_transaction_implementation as stock_transaction
 from flask import Flask, send_from_directory, json
 from flask_socketio import SocketIO
 from flask_cors import CORS
@@ -45,6 +46,18 @@ def on_connect():
 def on_disconnect():
     """When a client disconnects from this Socket connection, this function is run"""
     print('User disconnected!')
+    
+@socketio.on('pollStock')
+def poll_stock(data):
+    return stock_transaction.poll_stock_implementation(data)
+    
+@socketio.on('requestUserStockInfo')
+def request_user_stock_info(data):
+    return stock_transaction.request_user_stock_info_implementation(data, db)
+    
+@socketio.on('processTransaction')
+def process_transaction(data):
+    return stock_transaction.process_transaction_implementation(data, db)
 
 @socketio.on('login')
 def on_login(data):
