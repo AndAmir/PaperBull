@@ -5,6 +5,7 @@
     "@testing-library/user-event": "^12.8.3",
     "react": "^17.0.2",
     "react-dom": "^17.0.2",
+    "react-google-login": "^5.2.2",
     "react-scripts": "4.0.3",
     "socket.io": "^4.0.1",
     "socket.io-client": "^4.0.1",

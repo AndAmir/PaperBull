@@ -65,15 +65,24 @@ def on_login(data):
     print("Something Happened")
     print(str(data))
     print(data['currentUser'])
+    print(data['userRealName'])
     exists = bool(
         models.USERS.query.filter_by(username=data['currentUser']).first())
     if not exists:
         added = add_user(data['currentUser'])
         print("Added a new user")
-        socketio.emit('login', {'added' : added},
-                      broadcast=True,
-                      include_self=True)
+    socketio.emit('login', {'user' : data['currentUser'], 'name' : data['userRealName']},
+                  broadcast=True,
+                  include_self=True)
     return True
+
+@socketio.on('logout')
+def on_logout(data):
+    """Occurs when user logs out"""
+    socketio.emit('logout', {'user' : data['currentUser'], 'name' : data['userRealName']},
+                  broadcast=True,
+                  include_self=True)
+
 
 def add_user(user):
     """Helper function to add a user into database"""
