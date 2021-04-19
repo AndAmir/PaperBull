@@ -22,7 +22,7 @@ export function StockTransaction({
   const [avgPriceForOwnedStocks, updateAvgPriceForOwnedStocks] = useState(NOT_AVALIABLE_NUM_CONSTANT);
   
   // TODO: Implement this
-  const [maxStockInTransaction, changeMax] = useState(1000);
+  const [maxStockInTransaction, changeMax] = useState(0);
   
   const [pollTick, pollTickUpdater] = useState(false);
   
@@ -100,6 +100,7 @@ export function StockTransaction({
         return;
       }
       
+      quantityOfStockInput.current.value = 0;
       updateQuantityOwned();
       for (const [key, value] of Object.entries(response)) {
         console.log(key, value);
@@ -113,7 +114,7 @@ export function StockTransaction({
   
   function updateQuantityOwned() {
     socket.emit("requestUserStockInfo", 
-    {"ticker_symbol" : tickerSymbol, "user_id" : userId}, 
+    {"ticker_symbol" : tickerSymbol, "user_id" : userId, "transaction_mode" : transactionMode}, 
     (response) => {
       updateAmountOfStockOwned(response.quantity);
       if ("avg_price" in response) {
@@ -131,12 +132,18 @@ export function StockTransaction({
   
   // Refreshing Stock Price (Run on mount too)
   useEffect(() => {
-    socket.emit("pollStock", {"ticker_symbol" : tickerSymbol} , (response) => {
-      if (!("error" in response)) {
-        updateStockValue(response[tickerSymbol]);
-      } else {
-        console.log(`Couldn't get Stock Data From Server. Error(${response.error})`)
+    socket.emit("pollStock", 
+      {"ticker_symbol" : tickerSymbol, "user_id" : userId, "transaction_mode" : transactionMode}, 
+      (response) => {
+      if ("error" in response) {
+        updateStockValue(NOT_AVALIABLE_NUM_CONSTANT);
+        changeMax(0);
+        console.log(`Couldn't get Stock Data From Server. Error(${response.error})`);
+        return;
       }
+      
+      updateStockValue(response[tickerSymbol]);
+      changeMax(response.suggestive_max);
     });
     
     // After we centralize API Usage this is not needed
