@@ -2,3 +2,5 @@ app.test.js
 index.js
 reportWebVitals.js
 setupTests.js
+canvasjs.min.js
+canvasjs.react.js

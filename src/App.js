@@ -1,19 +1,20 @@
 import React, { useState, useRef, useEffect } from 'react';
 import './App.css';
 import io from 'socket.io-client';
+import { StockSearch } from './StockSearch';
 
 export const socket = io();
 
 function App() {
   const [thisUser, updateUser] = useState('');
   const inputUser = useRef('');
-
+  const [inSearchScreen, setInSearchScreen] = useState(false);
   function onButtonClick() {
     if (inputUser.current.value !== '') {
       const user = inputUser.current.value;
       updateUser(user);
       socket.emit('login', { currentUser: user });
-      console.log('emitted');
+      // console.log('emitted');
     }
   }
 
@@ -46,7 +47,9 @@ function App() {
       </div>
     );
   }
-
+  if (inSearchScreen) {
+    return (<StockSearch />);
+  }
   return (
     <div className="wrapper">
       <div>
@@ -55,6 +58,17 @@ function App() {
           {thisUser}
         </h1>
         <h3>Let&#39;s start investing</h3>
+      </div>
+      <div
+        onClick={() => {
+          setInSearchScreen(true);
+        }}
+        onKeyPress={(e) => e.key === 'Enter' && setInSearchScreen(true)}
+        id="search_button"
+        role="button"
+        tabIndex={0}
+      >
+        <h1>BUY/SELL A STOCK!</h1>
       </div>
       <div style={{ paddingTop: 10 }}>
         <button type="button" onClick={logout}><h3>Log Out </h3></button>
