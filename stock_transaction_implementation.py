@@ -221,6 +221,7 @@ def request_ticker_history(data):
     history = stock.historical
     final = {}
     volume = {}
+
     for i in history:
         date = i["date"].strftime("%Y-%m-%d")
         data = [i["open"], i["high"], i["low"], i["close"]]
@@ -228,3 +229,4 @@ def request_ticker_history(data):
         volume[date] = i['volume']
     response = {'final':final, 'volume':volume}
     return response
+

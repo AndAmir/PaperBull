@@ -9,6 +9,7 @@ export function StockChart() {
   const [ticker, setTicker] = useState('');
   const [stockHistory, setStockHistory] = useState([]);
   const [stockVolumeHistory, setStockVolumeHistory] = useState([]);
+
   // const [badTicker, setBadTicker] = useState(false);
   console.log('IM IN STOCKCHART', ticker);
 
@@ -27,6 +28,7 @@ export function StockChart() {
             setTicker('Invalid Ticker Symbol');
           } else {
             console.log('GOT RESPONSE', response);
+            
             Object.keys(response.final).forEach(
               (date) => setStockHistory((prev) => (
                 [...prev, { x: new Date(date), y: response.final[date] }])),
@@ -35,12 +37,15 @@ export function StockChart() {
             //   (date) => setStockVolumeHistory((prev) => (
             //     [...prev, { x: new Date(date), y: response.volume[date] }])),
             // );
+
           }
         });
     });
   }, []);
   const options = {
-    theme: 'light2', // "light1", "light2", "dark1", "dark2"
+
+    theme: 'dark2', // "light1", "light2", "dark1", "dark2"
+
     animationEnabled: true,
     exportEnabled: true,
     zoomEnabled: true,
@@ -62,10 +67,12 @@ export function StockChart() {
       xValueFormatString: 'MMMM DD',
       dataPoints: stockHistory,
     },
+
     {
       type: 'line',
       dataPoints: stockVolumeHistory,
     },
+
     ],
   };
 

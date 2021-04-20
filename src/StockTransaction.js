@@ -51,6 +51,7 @@ export function StockTransaction({
   const averageValueOfOwnedStocked = `${avgPriceForOwnedStocks !== NOT_AVALIABLE_NUM_CONSTANT
     ? `Average Value: $${avgPriceForOwnedStocks.toFixed(2)}` : ''}`;
 
+
   // Stock Quantity Selection
   const amountofStockPrompStr = `Quantity of stock to ${transactionMode.toLowerCase()}`;
 
@@ -83,6 +84,7 @@ export function StockTransaction({
 
   // Confirm Button
   const confirmText = processingTransaction ? 'Processing...' : `Confirm ${transactionMode}`;
+
   function updateQuantityOwned() {
     socket.emit('requestUserStockInfo',
       { ticker_symbol: tickerSymbol, user_id: userId, transaction_mode: transactionMode },
@@ -95,6 +97,7 @@ export function StockTransaction({
         }
       });
   }
+
 
   function attemptTransaction() {
     if (!shouldComponentBeInteractable) {
@@ -114,15 +117,18 @@ export function StockTransaction({
 
         quantityOfStockInput.current.value = 0;
         updateQuantityOwned();
+
         // for (const [key, value] of Object.entries(response)) {
         //   console.log(key, value);
         // }
+
       });
   }
 
   function componentTick() {
     pollTickUpdater((prevValue) => !prevValue);
   }
+
 
   // Run on mount
   useEffect(() => {
@@ -158,7 +164,9 @@ export function StockTransaction({
 
   return (
     <div className="stockTransactionComponent">
+
       <div className="closeButton" onClick={requestComponentClose} onKeyPress={(e) => e.key === 'Enter' && requestComponentClose} role="button" tabIndex={0}> X </div>
+
       <div className="stockTransactionInnerDiv">
         <div className="headerText">
           {' '}
