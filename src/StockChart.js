@@ -1,37 +1,35 @@
-import React, { useEffect, useState } from "react";
-import CanvasJSReact from "./lib/canvasjs.react";
-import { socket } from "./App";
+import React, { useEffect, useState } from 'react';
+import CanvasJSReact from './lib/canvasjs.react';
+import { socket } from './App';
 // var CanvasJSReact = require('./canvasjs.react');
 // const { CanvasJS } = CanvasJSReact;
 const { CanvasJSChart } = CanvasJSReact;
 
 export function StockChart() {
-  const [ticker, setTicker] = useState("");
+  const [ticker, setTicker] = useState('');
   const [stockHistory, setStockHistory] = useState([]);
   const [stockVolumeHistory, setStockVolumeHistory] = useState([]);
 
   // const [badTicker, setBadTicker] = useState(false);
-  console.log("IM IN STOCKCHART", ticker);
+  console.log('IM IN STOCKCHART', ticker);
 
   useEffect(() => {
-    socket.on("changeStockHistoryChart", (data) => {
+    socket.on('changeStockHistoryChart', (data) => {
       setTicker(data.ticker);
       setStockHistory([]);
       setStockVolumeHistory([]);
       // setBadTicker(false);
-      console.log("GETTING HISTORY", data.ticker);
-      socket.emit("requestStockHistory", data.ticker, (response) => {
+      console.log('GETTING HISTORY', data.ticker);
+      socket.emit('requestStockHistory', data.ticker, (response) => {
         if (response == null) {
           // setBadTicker(true);
-          setTicker("Invalid Ticker Symbol");
+          setTicker('Invalid Ticker Symbol');
         } else {
-          console.log("GOT RESPONSE", response);
-          Object.keys(response.final).forEach((date) =>
-            setStockHistory((prev) => [
-              ...prev,
-              { x: new Date(date), y: response.final[date] },
-            ])
-          );
+          console.log('GOT RESPONSE', response);
+          Object.keys(response.final).forEach((date) => setStockHistory((prev) => [
+            ...prev,
+            { x: new Date(date), y: response.final[date] },
+          ]));
           // Object.keys(response.volume).forEach(
           //   (date) => setStockVolumeHistory((prev) => (
           //     [...prev, { x: new Date(date), y: response.volume[date] }])),
@@ -41,7 +39,7 @@ export function StockChart() {
     });
   }, []);
   const options = {
-    theme: "light2", // "light1", "light2", "dark1", "dark2"
+    theme: 'light2', // "light1", "light2", "dark1", "dark2"
     animationEnabled: true,
     exportEnabled: true,
     zoomEnabled: true,
@@ -49,23 +47,23 @@ export function StockChart() {
       text: ticker,
     },
     axisX: {
-      valueFormatString: "MMM",
+      valueFormatString: 'MMM',
     },
     axisY: {
-      prefix: "$",
-      title: "Price (in USD)",
+      prefix: '$',
+      title: 'Price (in USD)',
     },
     data: [
       {
-        type: "candlestick",
+        type: 'candlestick',
         // showInLegend: true,
         // name: "Intel Corporation",
-        yValueFormatString: "$###0.00",
-        xValueFormatString: "MMMM DD",
+        yValueFormatString: '$###0.00',
+        xValueFormatString: 'MMMM DD',
         dataPoints: stockHistory,
       },
       {
-        type: "line",
+        type: 'line',
         dataPoints: stockVolumeHistory,
       },
     ],

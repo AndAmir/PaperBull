@@ -229,4 +229,3 @@ def request_ticker_history(data):
         volume[date] = i["volume"]
     response = {"final": final, "volume": volume}
     return response
-

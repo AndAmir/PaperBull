@@ -1,39 +1,39 @@
-import React, { useState, useRef, useEffect } from "react";
-import "./App.css";
-import io from "socket.io-client";
-import { StockSearch } from "./StockSearch";
+import React, { useState, useRef, useEffect } from 'react';
+import './App.css';
+import io from 'socket.io-client';
+import { StockSearch } from './StockSearch';
 
 export const socket = io();
 
 function App() {
-  const [thisUser, updateUser] = useState("");
-  const inputUser = useRef("");
+  const [thisUser, updateUser] = useState('');
+  const inputUser = useRef('');
   const [inSearchScreen, setInSearchScreen] = useState(false);
   function onButtonClick() {
-    if (inputUser.current.value !== "") {
+    if (inputUser.current.value !== '') {
       const user = inputUser.current.value;
       updateUser(user);
-      socket.emit("login", { currentUser: user });
+      socket.emit('login', { currentUser: user });
       // console.log('emitted');
     }
   }
 
   useEffect(() => {
-    socket.on("login", (data) => {
-      console.log("login registered");
+    socket.on('login', (data) => {
+      console.log('login registered');
       console.log(data.added);
     });
   }, []);
 
   function logout() {
-    if (thisUser !== "") {
-      updateUser("");
+    if (thisUser !== '') {
+      updateUser('');
     }
   }
 
-  const hellotext = "Hello ";
+  const hellotext = 'Hello ';
 
-  if (thisUser === "") {
+  if (thisUser === '') {
     return (
       <div className="wrapper-input">
         <div>
@@ -63,7 +63,7 @@ function App() {
         onClick={() => {
           setInSearchScreen(true);
         }}
-        onKeyPress={(e) => e.key === "Enter" && setInSearchScreen(true)}
+        onKeyPress={(e) => e.key === 'Enter' && setInSearchScreen(true)}
         id="search_button"
         role="button"
         tabIndex={0}

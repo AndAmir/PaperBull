@@ -1,10 +1,10 @@
-import React, { useRef, useState, useEffect } from "react";
-import "./StockTransaction.css";
-import PropTypes from "prop-types";
+import React, { useRef, useState, useEffect } from 'react';
+import './StockTransaction.css';
+import PropTypes from 'prop-types';
 
-import { socket } from "./App";
+import { socket } from './App';
 
-export const STOCK_TRANSACTION_MODES = { buy: "Buy", sell: "Sell" };
+export const STOCK_TRANSACTION_MODES = { buy: 'Buy', sell: 'Sell' };
 
 const NOT_AVALIABLE_NUM_CONSTANT = -1;
 
@@ -18,10 +18,10 @@ export function StockTransaction({
 }) {
   const [valueOfStock, updateStockValue] = useState(NOT_AVALIABLE_NUM_CONSTANT);
   const [amountOfStockOwned, updateAmountOfStockOwned] = useState(
-    NOT_AVALIABLE_NUM_CONSTANT
+    NOT_AVALIABLE_NUM_CONSTANT,
   );
   const [avgPriceForOwnedStocks, updateAvgPriceForOwnedStocks] = useState(
-    NOT_AVALIABLE_NUM_CONSTANT
+    NOT_AVALIABLE_NUM_CONSTANT,
   );
 
   // TODO: Implement this
@@ -33,10 +33,9 @@ export function StockTransaction({
 
   const [processingTransaction, changeProcessingTransaction] = useState(false);
 
-  const shouldComponentBeInteractable =
-    valueOfStock !== NOT_AVALIABLE_NUM_CONSTANT &&
-    amountOfStockOwned !== NOT_AVALIABLE_NUM_CONSTANT &&
-    !processingTransaction;
+  const shouldComponentBeInteractable = valueOfStock !== NOT_AVALIABLE_NUM_CONSTANT
+    && amountOfStockOwned !== NOT_AVALIABLE_NUM_CONSTANT
+    && !processingTransaction;
 
   // Header
   const headerText = transactionMode;
@@ -47,22 +46,19 @@ export function StockTransaction({
   }
 
   // Stock Value
-  const valueOfStockStr =
-    valueOfStock === NOT_AVALIABLE_NUM_CONSTANT
-      ? "..."
-      : `$${valueOfStock.toFixed(2)}`;
+  const valueOfStockStr = valueOfStock === NOT_AVALIABLE_NUM_CONSTANT
+    ? '...'
+    : `$${valueOfStock.toFixed(2)}`;
 
   // Stock Quantity Owned
-  const amountOfStockOwnedStr =
-    amountOfStockOwned === NOT_AVALIABLE_NUM_CONSTANT
-      ? "..."
-      : `${amountOfStockOwned}`;
+  const amountOfStockOwnedStr = amountOfStockOwned === NOT_AVALIABLE_NUM_CONSTANT
+    ? '...'
+    : `${amountOfStockOwned}`;
   const averageValueOfOwnedStocked = `${
     avgPriceForOwnedStocks !== NOT_AVALIABLE_NUM_CONSTANT
       ? `Average Value: $${avgPriceForOwnedStocks.toFixed(2)}`
-      : ""
+      : ''
   }`;
-
 
   // Stock Quantity Selection
   const amountofStockPrompStr = `Quantity of stock to ${transactionMode.toLowerCase()}`;
@@ -88,23 +84,22 @@ export function StockTransaction({
 
   // Money Delta
   const moneyDeltaStr = `Money ${
-    transactionMode === "Buy" ? "Lost" : "Gained"
+    transactionMode === 'Buy' ? 'Lost' : 'Gained'
   }`;
 
-  const moneyDeltaValueStr =
-    quantityOfStocks < 1
-      ? `$${(0.0).toFixed(2)}`
-      : `${transactionMode === "Buy" ? "-" : "+"} $${(
-          valueOfStock * quantityOfStocks
-        ).toFixed(2)}`;
+  const moneyDeltaValueStr = quantityOfStocks < 1
+    ? `$${(0.0).toFixed(2)}`
+    : `${transactionMode === 'Buy' ? '-' : '+'} $${(
+      valueOfStock * quantityOfStocks
+    ).toFixed(2)}`;
 
   // Confirm Button
   const confirmText = processingTransaction
-    ? "Processing..."
+    ? 'Processing...'
     : `Confirm ${transactionMode}`;
   function updateQuantityOwned() {
     socket.emit(
-      "requestUserStockInfo",
+      'requestUserStockInfo',
       {
         ticker_symbol: tickerSymbol,
         user_id: userId,
@@ -112,15 +107,14 @@ export function StockTransaction({
       },
       (response) => {
         updateAmountOfStockOwned(response.quantity);
-        if ("avg_price" in response) {
+        if ('avg_price' in response) {
           updateAvgPriceForOwnedStocks(response.avg_price);
         } else {
           updateAvgPriceForOwnedStocks(NOT_AVALIABLE_NUM_CONSTANT);
         }
-      }
+      },
     );
   }
-
 
   function attemptTransaction() {
     if (!shouldComponentBeInteractable) {
@@ -128,7 +122,7 @@ export function StockTransaction({
     }
     changeProcessingTransaction(true);
     socket.emit(
-      "processTransaction",
+      'processTransaction',
       {
         ticker_symbol: tickerSymbol,
         user_id: userId,
@@ -137,7 +131,7 @@ export function StockTransaction({
       },
       (response) => {
         changeProcessingTransaction(false);
-        if ("error" in response) {
+        if ('error' in response) {
           console.log(`Transaction Failed. Error(${response.error})`);
           return;
         }
@@ -148,14 +142,13 @@ export function StockTransaction({
         // for (const [key, value] of Object.entries(response)) {
         //   console.log(key, value);
         // }
-      }
+      },
     );
   }
 
   function componentTick() {
     pollTickUpdater((prevValue) => !prevValue);
   }
-
 
   // Run on mount
   useEffect(() => {
@@ -165,25 +158,25 @@ export function StockTransaction({
   // Refreshing Stock Price (Run on mount too)
   useEffect(() => {
     socket.emit(
-      "pollStock",
+      'pollStock',
       {
         ticker_symbol: tickerSymbol,
         user_id: userId,
         transaction_mode: transactionMode,
       },
       (response) => {
-        if ("error" in response) {
+        if ('error' in response) {
           updateStockValue(NOT_AVALIABLE_NUM_CONSTANT);
           changeMax(0);
           console.log(
-            `Couldn't get Stock Data From Server. Error(${response.error})`
+            `Couldn't get Stock Data From Server. Error(${response.error})`,
           );
           return;
         }
 
         updateStockValue(response[tickerSymbol]);
         changeMax(response.suggestive_max);
-      }
+      },
     );
 
     // After we centralize API Usage this is not needed
@@ -191,7 +184,7 @@ export function StockTransaction({
 
     const timeoutReference = setTimeout(
       componentTick,
-      (SECONDS_TILL_POLL_SERVER + temporaryRandomOffset) * 1000
+      (SECONDS_TILL_POLL_SERVER + temporaryRandomOffset) * 1000,
     );
 
     // Clean up function
@@ -205,19 +198,32 @@ export function StockTransaction({
       <div
         className="closeButton"
         onClick={requestComponentClose}
-        onKeyPress={(e) => e.key === "Enter" && requestComponentClose}
+        onKeyPress={(e) => e.key === 'Enter' && requestComponentClose}
         role="button"
         tabIndex={0}
       >
-        {" "}
-        X{" "}
+        {' '}
+        X
+        {' '}
       </div>
       <div className="stockTransactionInnerDiv">
-        <div className="headerText"> {headerText} </div>
+        <div className="headerText">
+          {' '}
+          {headerText}
+          {' '}
+        </div>
         <table className="stockTransactionTable">
           <tr className="tickerInfo">
-            <td className="leftAlign"> {tickerSymbol} </td>
-            <td className="rightAlign"> {valueOfStockStr} </td>
+            <td className="leftAlign">
+              {' '}
+              {tickerSymbol}
+              {' '}
+            </td>
+            <td className="rightAlign">
+              {' '}
+              {valueOfStockStr}
+              {' '}
+            </td>
           </tr>
           <tr className="currentlyOwned">
             <td className="leftAlign"> Currently Owned </td>
@@ -228,7 +234,11 @@ export function StockTransaction({
             </td>
           </tr>
           <tr className="amountOfStocks">
-            <td className="leftAlign"> {amountofStockPrompStr} </td>
+            <td className="leftAlign">
+              {' '}
+              {amountofStockPrompStr}
+              {' '}
+            </td>
             <td className="rightAlign">
               <input
                 className="inputBox"
@@ -244,15 +254,23 @@ export function StockTransaction({
             </td>
           </tr>
           <tr className="moneyDelta">
-            <td className="leftAlign"> {moneyDeltaStr} </td>
-            <td className="rightAlign"> {moneyDeltaValueStr} </td>
+            <td className="leftAlign">
+              {' '}
+              {moneyDeltaStr}
+              {' '}
+            </td>
+            <td className="rightAlign">
+              {' '}
+              {moneyDeltaValueStr}
+              {' '}
+            </td>
           </tr>
         </table>
         {quantityOfStocks > 0 && (
           <div
             className="confirmButton"
             onClick={attemptTransaction}
-            onKeyPress={(e) => e.key === "Enter" && attemptTransaction}
+            onKeyPress={(e) => e.key === 'Enter' && attemptTransaction}
             role="button"
             tabIndex={0}
           >
