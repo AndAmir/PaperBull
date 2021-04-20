@@ -1,5 +1,6 @@
 import os
 import stock_transaction_implementation as stock_transaction
+import update_profile as up
 from flask import Flask, send_from_directory, json
 from flask_socketio import SocketIO
 from flask_cors import CORS
@@ -17,7 +18,7 @@ APP.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 db = SQLAlchemy(APP)
 
 import models
-db.create_all()
+# db.create_all()
 
 cors = CORS(APP, resources={r"/*": {"origins": "*"}})
 
@@ -55,6 +56,16 @@ def request_user_stock_info(data):
 def process_transaction(data):
     return stock_transaction.process_transaction_implementation(data, db)
     
+@socketio.on('updatePortfolio')
+def updatePortfolio(data):
+    print(data)
+    return up.getUserStockDataFromDB(data, db)
+    
+@socketio.on('updateCashBalance')
+def updateCashBalance(data):
+    print(data)
+    return up.getCashBalance(data, db)
+    
 
 if __name__ == "__main__":
     socketio.run(
@@ -63,7 +74,3 @@ if __name__ == "__main__":
         port=8081 if os.getenv('C9_PORT') else int(os.getenv('PORT', 8081)),
     )
     
-    i = 0
-    while(True):
-        print(i)
-        i+=1

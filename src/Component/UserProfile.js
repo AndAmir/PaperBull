@@ -1,21 +1,21 @@
 import { useState } from 'react';
 import './UserProfile.css';
 
-function UserProfile({totalAssetsOwned, totalInvested}) {
+function UserProfile({userName, totalAssetsOwned, cashBal}) {
     
     const DEFUALT_STARTING_AMOUNT = 10000;
-    console.log(totalInvested);
-    
-    function getCashBalance(){
-        let cashBal = totalAssetsOwned - totalInvested;
-        cashBal = cashBal.toFixed(2);
-        return cashBal;
-    }
     
     function getPercentChange(){
-        let percentChange = ((totalAssetsOwned - DEFUALT_STARTING_AMOUNT) / DEFUALT_STARTING_AMOUNT) * 100;
+        let percentChange = (((parseInt(cashBal) + parseInt(totalAssetsOwned)) - DEFUALT_STARTING_AMOUNT) / DEFUALT_STARTING_AMOUNT) * 100;
         percentChange = percentChange.toFixed(2);
         return percentChange;
+    }
+    
+    function getTotalAssets(){
+        let amountChange = parseInt(cashBal) + parseInt(totalAssetsOwned)
+        console.log(cashBal)
+        console.log(totalAssetsOwned)
+        return amountChange.toFixed(2)
     }
     return (
         <div className = "userProfileHeader">
@@ -23,11 +23,11 @@ function UserProfile({totalAssetsOwned, totalInvested}) {
                 <img src="https://bit.ly/3tzk13c" alt=''/>
             </div>
             <div className="profileName">
-                <p>Parth Patel</p>
+                <p>{userName}</p>
             </div>
             <div className="userBalance">
-                <h4> Total Assets: ${totalAssetsOwned} ({getPercentChange()}%) </h4>
-                <h4> Cash Balance: ${getCashBalance()} </h4>
+                <h4> Total Assets: ${getTotalAssets()} ({getPercentChange()}%) </h4>
+                <h4> Cash Balance: ${cashBal.toFixed(2)} </h4>
             </div>
         </div>
     );

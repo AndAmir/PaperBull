@@ -8,15 +8,16 @@ def getUserStockDataFromDB(data, db):
     
     userName = data['userName']
     # get the users username_id
-    dbUserId = db.session.query(models.USERS).filter_by(userName).first().username_id
-    
+    dbUserId = db.session.query(models.USERS).filter_by(username=userName).first().username_id
     #get the stocks owned by that user to get their potential assets
-    stocksOwnedByUser = db.session.query(models.STOCKS).filter_by(dbUserId).all().ticker
-    
-    #pass in tickerSymbol to helper function to get data !!!!PSA This might not be a list!!!!
-    for stock in stocksOwnedByUser:
-        quantity = db.session.query(models.STOCKS).filter_by(dbUserId).filter_by(stock).quantity
-        averagePrice = db.session.query(models.STOCKS).filter_by(dbUserId).filter_by(stock).avg_price
+    stocksOwnedByUser = db.session.query(models.STOCKS).filter_by(username_id=dbUserId).all()
+    # pass in tickerSymbol to helper function to get data !!!!PSA This might not be a list!!!!
+    for tableData in stocksOwnedByUser:
+        stock = tableData.ticker
+        quantity = tableData.quantity
+        averagePrice = tableData.avg_price
+        # quantity = db.session.query(models.STOCKS).filter_by(username_id=dbUserId).filter_by(ticker=stock).quantity
+        # averagePrice = db.session.query(models.STOCKS).filter_by(username_id=dbUserId).filter_by(ticker=stock).avg_price
         currentPrice = stock_transaction.helper_get_stock_price(stock)
         # DICT TO STORE DATA LIKE: {'quantity': 10, 'averagePrice': 32.08, 'currentPrice' : 60}
         dataRes = dict()
@@ -27,3 +28,8 @@ def getUserStockDataFromDB(data, db):
         response[stock] = dataRes
         
     return response
+    
+def getCashBalance(data, db):
+    userName = data['userName']
+    cashBalance = db.session.query(models.USERS).filter_by(username=userName).first().cash_balance
+    return cashBalance

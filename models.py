@@ -19,7 +19,7 @@ class STOCKS(DB.Model):
     avg_price = DB.Column(DB.Float, nullable=False)
     __tablename__ = 'STOCKS'
     def __repr__(self):
-        return '<Player %r>' % self.username
+        return '<Player %r>' % self.username_id
         
 # action_type IS EITHER "buy" or "sell"
 class HISTORY(DB.Model):
