@@ -1,12 +1,16 @@
 .stockTransactionComponent {
-  position: fixed;
-  width: 60vw;
-  height: 80vh;
-  border: 1px solid;
-  padding: min(3vh, 3vw);
-  overflow: auto;
-  top: 7vh;
-  left: 17vw;
+    position: fixed;
+    width: 60vw;
+    height: 75vh;
+    border: 4px solid #90caf9;
+    background: #e3f2fd;
+    padding: min(3vh, 3vw);
+    overflow: auto;
+    top: 7vh;
+    left: 17vw;
+    font-weight: 600;
+    font-family: "Courier New";
+    border-radius: 15px;
 }
 
 .stockTransactionInnerDiv {
@@ -21,7 +25,19 @@
 
 .headerText {
     text-align: center;
+    font-weight: bold;
     font-size: clamp(1rem, min(4.5vh, 4.5vw), 100px);
+}
+
+.inputBox {
+    width: clamp(30%, min(3vh, 3vw), 50px);
+    height: clamp(1rem, min(3vh, 3vw), 50px);
+    border-radius: 7px;
+}
+
+.inputBox[type=number] {
+    font-size: clamp(1rem, min(3vh, 3vw), 30px);
+    font-weight: 600;
 }
 
 .leftAlign {
@@ -45,6 +61,8 @@
     align-items: center;
     width: 50%;
     height: 15%;
+    font-size: clamp(1rem, min(3vw, 3vh), 300%);
+    font-weight: bold;
     background: #90caf9;
     -webkit-touch-callout: none;
     -webkit-user-select: none;
@@ -55,11 +73,31 @@
 }
 
 .confirmButton:after {
-  content: "";
-  clear: both;
-  display: table;
+    content: "";
+    clear: both;
+    display: table;
 }
 
 .confirmButton:hover {
- background: #64b5f6;
+    background: #64b5f6;
+}
+
+
+.closeButton {
+    -webkit-touch-callout: none;
+    -webkit-user-select: none;
+    -khtml-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+    user-select: none;
+    color: #e57373;
+    position: absolute;
+    top: 2vh;
+    right: 2vw;
+    font-size: clamp(1.5rem, min(3vh, 3vw), 50px);
+    font-family: Arial
+}
+
+.closeButton:hover {
+    color: #f44336
 }

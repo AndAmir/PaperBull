@@ -35,6 +35,11 @@ export function StockTransaction({
 
   // Header
   const headerText = transactionMode;
+  
+  // Close Button
+  function requestComponentClose() {
+    displayComponentFunc(false);
+  }
 
   // Stock Value
   const valueOfStockStr = valueOfStock === NOT_AVALIABLE_NUM_CONSTANT
@@ -154,6 +159,7 @@ export function StockTransaction({
 
   return (
     <div className="stockTransactionComponent">
+     <div class="closeButton" onClick={requestComponentClose}> X </div>
       <div className="stockTransactionInnerDiv">
         <div className="headerText">
           {' '}
@@ -189,6 +195,7 @@ export function StockTransaction({
             </td>
             <td className="rightAlign">
               <input
+                class="inputBox"
                 ref={quantityOfStockInput}
                 disabled={!shouldComponentBeInteractable}
                 type="number"
