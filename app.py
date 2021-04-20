@@ -55,10 +55,6 @@ def request_user_stock_info(data):
 def process_transaction(data):
     return stock_transaction.process_transaction_implementation(data, db)
     
-@socketio.on('getCurrentPrice')
-def getCurrentPrice(data):
-    print(data)
-    socketio.emit('currentPrice', data)
 
 if __name__ == "__main__":
     socketio.run(
@@ -66,3 +62,8 @@ if __name__ == "__main__":
         host=os.getenv('IP', '0.0.0.0'),
         port=8081 if os.getenv('C9_PORT') else int(os.getenv('PORT', 8081)),
     )
+    
+    i = 0
+    while(True):
+        print(i)
+        i+=1
