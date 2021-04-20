@@ -12,17 +12,24 @@ export function StockSearch(props) {
   const [isBuy, setIsBuy] = useState(false);
   const [isSell, setIsSell] = useState(false);
 
+
   function search() {
     setUserInput(inputTicker);
     socket.emit("searchTicker", { ticker: inputTicker.current.value }); // TODO MUST FIX GETTING INPUT
   }
+
   function transaction(type) {
     if (type === "buy") {
       setIsBuy(true);
     } else if (type === "sell") {
       setIsSell(true);
     }
+<<<<<<< HEAD
     console.log("transaction");
+=======
+
+    console.log('transaction');
+>>>>>>> 8360b43140a3e60e61e3407b2924cf977ca6618c
   }
 
   return (
@@ -67,7 +74,12 @@ export function StockSearch(props) {
             onClick={() => {
               transaction("buy");
             }}
+<<<<<<< HEAD
             onKeyPress={(e) => e.key === "Enter" && transaction("buy")}
+=======
+            onKeyPress={(e) => e.key === 'Enter' && transaction('buy')}
+
+>>>>>>> 8360b43140a3e60e61e3407b2924cf977ca6618c
             id="buy"
             role="button"
             tabIndex={0}
@@ -78,7 +90,12 @@ export function StockSearch(props) {
             onClick={() => {
               transaction("sell");
             }}
+<<<<<<< HEAD
             onKeyPress={(e) => e.key === "Enter" && transaction("sell")}
+=======
+            onKeyPress={(e) => e.key === 'Enter' && transaction('sell')}
+
+>>>>>>> 8360b43140a3e60e61e3407b2924cf977ca6618c
             id="sell"
             role="button"
             tabIndex={0}
@@ -94,3 +111,4 @@ export default StockSearch;
 StockSearch.propTypes = {
   userID: PropTypes.string.isRequired,
 };
+

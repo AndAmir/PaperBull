@@ -9,6 +9,7 @@ export function StockChart() {
   const [ticker, setTicker] = useState("");
   const [stockHistory, setStockHistory] = useState([]);
   const [stockVolumeHistory, setStockVolumeHistory] = useState([]);
+
   // const [badTicker, setBadTicker] = useState(false);
   console.log("IM IN STOCKCHART", ticker);
 
@@ -18,6 +19,7 @@ export function StockChart() {
       setStockHistory([]);
       setStockVolumeHistory([]);
       // setBadTicker(false);
+<<<<<<< HEAD
       console.log("GETTING HISTORY", data.ticker);
       socket.emit("requestStockHistory", data.ticker, (response) => {
         if (response == null) {
@@ -41,6 +43,35 @@ export function StockChart() {
   }, []);
   const options = {
     theme: "light2", // "light1", "light2", "dark1", "dark2"
+=======
+      console.log('GETTING HISTORY', data.ticker);
+      socket.emit('requestStockHistory',
+        data.ticker,
+        (response) => {
+          if (response == null) {
+            // setBadTicker(true);
+            setTicker('Invalid Ticker Symbol');
+          } else {
+            console.log('GOT RESPONSE', response);
+            
+            Object.keys(response.final).forEach(
+              (date) => setStockHistory((prev) => (
+                [...prev, { x: new Date(date), y: response.final[date] }])),
+            );
+            // Object.keys(response.volume).forEach(
+            //   (date) => setStockVolumeHistory((prev) => (
+            //     [...prev, { x: new Date(date), y: response.volume[date] }])),
+            // );
+
+          }
+        });
+    });
+  }, []);
+  const options = {
+
+    theme: 'dark2', // "light1", "light2", "dark1", "dark2"
+
+>>>>>>> 8360b43140a3e60e61e3407b2924cf977ca6618c
     animationEnabled: true,
     exportEnabled: true,
     zoomEnabled: true,
@@ -51,6 +82,7 @@ export function StockChart() {
       valueFormatString: "MMM",
     },
     axisY: {
+<<<<<<< HEAD
       prefix: "$",
       title: "Price (in USD)",
     },
@@ -67,6 +99,25 @@ export function StockChart() {
         type: "line",
         dataPoints: stockVolumeHistory,
       },
+=======
+      prefix: '$',
+      title: 'Price (in USD)',
+    },
+    data: [{
+      type: 'candlestick',
+      // showInLegend: true,
+      // name: "Intel Corporation",
+      yValueFormatString: '$###0.00',
+      xValueFormatString: 'MMMM DD',
+      dataPoints: stockHistory,
+    },
+
+    {
+      type: 'line',
+      dataPoints: stockVolumeHistory,
+    },
+
+>>>>>>> 8360b43140a3e60e61e3407b2924cf977ca6618c
     ],
   };
 

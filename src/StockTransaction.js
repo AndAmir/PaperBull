@@ -63,6 +63,7 @@ export function StockTransaction({
       : ""
   }`;
 
+
   // Stock Quantity Selection
   const amountofStockPrompStr = `Quantity of stock to ${transactionMode.toLowerCase()}`;
 
@@ -98,9 +99,14 @@ export function StockTransaction({
         ).toFixed(2)}`;
 
   // Confirm Button
+<<<<<<< HEAD
   const confirmText = processingTransaction
     ? "Processing..."
     : `Confirm ${transactionMode}`;
+=======
+  const confirmText = processingTransaction ? 'Processing...' : `Confirm ${transactionMode}`;
+
+>>>>>>> 8360b43140a3e60e61e3407b2924cf977ca6618c
   function updateQuantityOwned() {
     socket.emit(
       "requestUserStockInfo",
@@ -119,6 +125,7 @@ export function StockTransaction({
       }
     );
   }
+
 
   function attemptTransaction() {
     if (!shouldComponentBeInteractable) {
@@ -142,16 +149,23 @@ export function StockTransaction({
 
         quantityOfStockInput.current.value = 0;
         updateQuantityOwned();
+
         // for (const [key, value] of Object.entries(response)) {
         //   console.log(key, value);
         // }
+<<<<<<< HEAD
       }
     );
+=======
+
+      });
+>>>>>>> 8360b43140a3e60e61e3407b2924cf977ca6618c
   }
 
   function componentTick() {
     pollTickUpdater((prevValue) => !prevValue);
   }
+
 
   // Run on mount
   useEffect(() => {
@@ -198,6 +212,7 @@ export function StockTransaction({
 
   return (
     <div className="stockTransactionComponent">
+<<<<<<< HEAD
       <div
         className="closeButton"
         onClick={requestComponentClose}
@@ -208,6 +223,11 @@ export function StockTransaction({
         {" "}
         X{" "}
       </div>
+=======
+
+      <div className="closeButton" onClick={requestComponentClose} onKeyPress={(e) => e.key === 'Enter' && requestComponentClose} role="button" tabIndex={0}> X </div>
+
+>>>>>>> 8360b43140a3e60e61e3407b2924cf977ca6618c
       <div className="stockTransactionInnerDiv">
         <div className="headerText"> {headerText} </div>
         <table className="stockTransactionTable">
