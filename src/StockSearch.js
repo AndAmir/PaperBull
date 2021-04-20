@@ -1,34 +1,74 @@
 import React, { useRef, useState } from 'react';
+import PropTypes from 'prop-types';
 import { socket } from './App';
 import { StockChart } from './StockChart';
+import { StockTransaction, STOCK_TRANSACTION_MODES } from './StockTransaction';
 
-export function StockSearch() {
+export function StockSearch(props) {
+  const { userID } = props;
   const [userInput, setUserInput] = useState('');
   const inputTicker = useRef();
+  const [displayStockTransaction, setDisplayStockTransaction] = useState(false);
+  const [isBuy, setIsBuy] = useState(false);
+  const [isSell, setIsSell] = useState(false);
 
   function search() {
     setUserInput(inputTicker);
-    socket.emit('searchTicker', { ticker: inputTicker.current.value });// TODO MUST FIX GETTING INPUT
+    socket.emit('searchTicker', { ticker: inputTicker.current.value }); // TODO MUST FIX GETTING INPUT
   }
-  function transaction() {
+
+  function transaction(type) {
+    if (type === 'buy') {
+      setIsBuy(true);
+    } else if (type === 'sell') {
+      setIsSell(true);
+    }
     console.log('transaction');
   }
 
   return (
     <div>
-      <input type="text" ref={inputTicker} placeholder="Enter Ticker Symbol..." onKeyPress={(e) => e.key === 'Enter' && search()} required />
+      <input
+        type="text"
+        ref={inputTicker}
+        placeholder="Enter Ticker Symbol..."
+        onKeyPress={(e) => e.key === 'Enter' && search()}
+        required
+      />
 
       {/* <h1>{userInput}</h1> */}
-      { userInput === '' ? (
+      {userInput === '' ? (
         <h1>Enter a Ticker Symbol</h1>
       ) : (
         <div>
-          <StockChart ticker={inputTicker} />
+          {displayStockTransaction ? (
+            <div>
+              {isBuy && (
+                <StockTransaction
+                  transactionMode={STOCK_TRANSACTION_MODES.buy}
+                  userid={userID}
+                  tickerSymbol={inputTicker}
+                  displayComponentFunc={setDisplayStockTransaction}
+                />
+              )}
+              {isSell && (
+                <StockTransaction
+                  transactionMode={STOCK_TRANSACTION_MODES.sell}
+                  userid={userID}
+                  tickerSymbol={inputTicker}
+                  displayComponentFunc={setDisplayStockTransaction}
+                />
+              )}
+            </div>
+          ) : (
+            <StockChart ticker={inputTicker} />
+          )}
+
           <div
             onClick={() => {
-              transaction();
+              transaction('buy');
             }}
-            onKeyPress={(e) => e.key === 'Enter' && transaction()}
+            onKeyPress={(e) => e.key === 'Enter' && transaction('buy')}
             id="buy"
             role="button"
             tabIndex={0}
@@ -37,9 +77,9 @@ export function StockSearch() {
           </div>
           <div
             onClick={() => {
-              transaction();
+              transaction('sell');
             }}
-            onKeyPress={(e) => e.key === 'Enter' && transaction()}
+            onKeyPress={(e) => e.key === 'Enter' && transaction('sell')}
             id="sell"
             role="button"
             tabIndex={0}
@@ -48,8 +88,10 @@ export function StockSearch() {
           </div>
         </div>
       )}
-
     </div>
   );
 }
 export default StockSearch;
+StockSearch.propTypes = {
+  userID: PropTypes.string.isRequired,
+};

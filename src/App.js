@@ -48,7 +48,7 @@ function App() {
     );
   }
   if (inSearchScreen) {
-    return (<StockSearch />);
+    return <StockSearch userID={thisUser} />;
   }
   return (
     <div className="wrapper">
@@ -71,7 +71,9 @@ function App() {
         <h1>BUY/SELL A STOCK!</h1>
       </div>
       <div style={{ paddingTop: 10 }}>
-        <button type="button" onClick={logout}><h3>Log Out </h3></button>
+        <button type="button" onClick={logout}>
+          <h3>Log Out </h3>
+        </button>
       </div>
     </div>
   );
