@@ -225,6 +225,6 @@ def request_ticker_history(data):
         date = i["date"].strftime("%Y-%m-%d")
         data = [i["open"], i["high"], i["low"], i["close"]]
         final[date] = data
-        volume[date] = i['volume']
-    response = {'final':final, 'volume':volume}
+        volume[date] = i["volume"]
+    response = {"final": final, "volume": volume}
     return response
