@@ -46,11 +46,10 @@ export function StockTransaction({
     ? '...' : `$${valueOfStock.toFixed(2)}`;
 
   // Stock Quantity Owned
-  const amountOfStockOwnedStr = amountOfStockOwned === NOT_AVALIABLE_NUM_CONSTANT?
-    "..." : `${amountOfStockOwned}`;
-  const averageValueOfOwnedStocked =
-    `${avgPriceForOwnedStocks !== NOT_AVALIABLE_NUM_CONSTANT?
-    `Average Value: $${avgPriceForOwnedStocks.toFixed(2)}` : ``}`
+  const amountOfStockOwnedStr = amountOfStockOwned === NOT_AVALIABLE_NUM_CONSTANT
+    ? '...' : `${amountOfStockOwned}`;
+  const averageValueOfOwnedStocked = `${avgPriceForOwnedStocks !== NOT_AVALIABLE_NUM_CONSTANT
+    ? `Average Value: $${avgPriceForOwnedStocks.toFixed(2)}` : ''}`;
 
   // Stock Quantity Selection
   const amountofStockPrompStr = `Quantity of stock to ${transactionMode.toLowerCase()}`;
@@ -59,8 +58,8 @@ export function StockTransaction({
 
   function onQuanityOfStocksChange() {
     const valueInInputField = quantityOfStockInput.current.value;
-    let validatedValue = parseInt(valueInInputField);
-    if (isNaN(validatedValue)) {
+    let validatedValue = parseInt(valueInInputField, 10);// added ',10' for linting
+    if (Number.isNaN(validatedValue)) { // added 'Number.'
       validatedValue = 0;
     } else if (valueInInputField < 0) {
       validatedValue = 1;
@@ -84,6 +83,18 @@ export function StockTransaction({
 
   // Confirm Button
   const confirmText = processingTransaction ? 'Processing...' : `Confirm ${transactionMode}`;
+  function updateQuantityOwned() {
+    socket.emit('requestUserStockInfo',
+      { ticker_symbol: tickerSymbol, user_id: userId, transaction_mode: transactionMode },
+      (response) => {
+        updateAmountOfStockOwned(response.quantity);
+        if ('avg_price' in response) {
+          updateAvgPriceForOwnedStocks(response.avg_price);
+        } else {
+          updateAvgPriceForOwnedStocks(NOT_AVALIABLE_NUM_CONSTANT);
+        }
+      });
+  }
 
   function attemptTransaction() {
     if (!shouldComponentBeInteractable) {
@@ -103,27 +114,14 @@ export function StockTransaction({
 
         quantityOfStockInput.current.value = 0;
         updateQuantityOwned();
-        for (const [key, value] of Object.entries(response)) {
-          console.log(key, value);
-        }
+        // for (const [key, value] of Object.entries(response)) {
+        //   console.log(key, value);
+        // }
       });
   }
 
   function componentTick() {
     pollTickUpdater((prevValue) => !prevValue);
-  }
-
-  function updateQuantityOwned() {
-    socket.emit('requestUserStockInfo',
-      { ticker_symbol: tickerSymbol, user_id: userId, transaction_mode: transactionMode },
-      (response) => {
-        updateAmountOfStockOwned(response.quantity);
-        if ('avg_price' in response) {
-          updateAvgPriceForOwnedStocks(response.avg_price);
-        } else {
-          updateAvgPriceForOwnedStocks(NOT_AVALIABLE_NUM_CONSTANT);
-        }
-      });
   }
 
   // Run on mount
@@ -159,14 +157,26 @@ export function StockTransaction({
   }, [pollTick]);
 
   return (
-    <div class="stockTransactionComponent">
-      <div class="closeButton" onClick={requestComponentClose}> X </div>
-      <div class="stockTransactionInnerDiv">
-        <div class="headerText"> {headerText} </div>
-        <table class="stockTransactionTable">
-          <tr class="tickerInfo">
-            <td class="leftAlign"> {tickerSymbol} </td>
-            <td class="rightAlign"> {valueOfStockStr} </td>
+    <div className="stockTransactionComponent">
+      <div className="closeButton" onClick={requestComponentClose} onKeyPress={(e) => e.key === 'Enter' && requestComponentClose} role="button" tabIndex={0}> X </div>
+      <div className="stockTransactionInnerDiv">
+        <div className="headerText">
+          {' '}
+          {headerText}
+          {' '}
+        </div>
+        <table className="stockTransactionTable">
+          <tr className="tickerInfo">
+            <td className="leftAlign">
+              {' '}
+              {tickerSymbol}
+              {' '}
+            </td>
+            <td className="rightAlign">
+              {' '}
+              {valueOfStockStr}
+              {' '}
+            </td>
           </tr>
           <tr className="currentlyOwned">
             <td className="leftAlign"> Currently Owned </td>
@@ -184,7 +194,7 @@ export function StockTransaction({
             </td>
             <td className="rightAlign">
               <input
-                class="inputBox"
+                className="inputBox"
                 ref={quantityOfStockInput}
                 disabled={!shouldComponentBeInteractable}
                 type="number"
@@ -214,6 +224,9 @@ export function StockTransaction({
         <div
           className="confirmButton"
           onClick={attemptTransaction}
+          onKeyPress={(e) => e.key === 'Enter' && attemptTransaction}
+          role="button"
+          tabIndex={0}
         >
           {confirmText}
         </div>
