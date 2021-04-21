@@ -3,7 +3,7 @@ import './App.css';
 import io from 'socket.io-client';
 import { Login } from './Login'; // eslint-disable-line
 import { Logout } from './Logout'; // eslint-disable-line
-import { StockSearch } from './StockSearch';
+import { StockSearch } from './StockSearch'; // eslint-disable-line
 
 export const socket = io();
 

@@ -1,8 +1,8 @@
 import React, { useRef, useState } from 'react';
 import PropTypes from 'prop-types';
-import { socket } from './App';
-import { StockChart } from './StockChart';
-import { StockTransaction, STOCK_TRANSACTION_MODES } from './StockTransaction';
+import { socket } from './App';// eslint-disable-line
+import { StockChart } from './StockChart';// eslint-disable-line
+import { StockTransaction, STOCK_TRANSACTION_MODES } from './StockTransaction';// eslint-disable-line
 
 export function StockSearch(props) {
   const { userID } = props;

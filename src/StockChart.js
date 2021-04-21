@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import CanvasJSReact from './lib/canvasjs.react';
-import { socket } from './App';
+import { socket } from './App';// eslint-disable-line
 // var CanvasJSReact = require('./canvasjs.react');
 // const { CanvasJS } = CanvasJSReact;
 const { CanvasJSChart } = CanvasJSReact;
