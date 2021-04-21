@@ -2,16 +2,14 @@ import React, { useState, useEffect } from 'react';
 import './App.css';
 import io from 'socket.io-client';
 import { Login } from './Login'; // eslint-disable-line
-import { Logout } from './Logout'; // eslint-disable-line
-import { StockSearch } from './StockSearch';
+import Profile from './Component/Profile';
 
 export const socket = io();
 
 function App() {
   const [thisUser, updateUser] = useState(''); // thisUser variable contains user email
   const [fullName, updateName] = useState(''); // fullName variable contains user's first and last name
-  const [inSearchScreen, setInSearchScreen] = useState(false);
-
+  console.log(fullName);
   useEffect(() => {
     socket.on('login', (data) => {
       console.log('login registered');
@@ -32,8 +30,6 @@ function App() {
     });
   }, []);
 
-  const hellotext = 'Hello ';
-
   if (thisUser === '') {
     return (
       <div className="wrapper-input">
@@ -45,34 +41,10 @@ function App() {
       </div>
     );
   }
-  if (inSearchScreen) {
-    return <StockSearch userID={thisUser} />;
-  }
+
   return (
     <div className="wrapper">
-      <div>
-
-        <h1>
-          {hellotext}
-          {fullName}
-        </h1>
-        <h3>Let&#39;s start investing</h3>
-      </div>
-      <div
-        onClick={() => {
-          setInSearchScreen(true);
-        }}
-        onKeyPress={(e) => e.key === 'Enter' && setInSearchScreen(true)}
-        id="search_button"
-        role="button"
-        tabIndex={0}
-      >
-        <h1>BUY/SELL A STOCK!</h1>
-      </div>
-      <div style={{ paddingTop: 10 }}>
-
-        <Logout />
-      </div>
+      <Profile userName={thisUser} />
     </div>
   );
 }

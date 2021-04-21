@@ -2,7 +2,7 @@ import React, { useRef, useState, useEffect } from 'react';
 import './StockTransaction.css';
 import PropTypes from 'prop-types';
 
-import { socket } from './App';
+import { socket } from './App'; // eslint-disable-line
 
 export const STOCK_TRANSACTION_MODES = { buy: 'Buy', sell: 'Sell' };
 
@@ -16,6 +16,7 @@ export function StockTransaction({
   tickerSymbol,
   displayComponentFunc,
 }) {
+  console.log('Hello');
   const [valueOfStock, updateStockValue] = useState(NOT_AVALIABLE_NUM_CONSTANT);
   const [amountOfStockOwned, updateAmountOfStockOwned] = useState(
     NOT_AVALIABLE_NUM_CONSTANT,
