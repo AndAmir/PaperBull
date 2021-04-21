@@ -3,9 +3,9 @@ import models
 
 # 'UBER': {'quantity': 10, 'averagePrice': 32.08, 'currentPrice' : 60},
 def getUserStockDataFromDB(data, db):
-    
+
     response = dict()
-    
+
     userName = data['userName']
     # get the users username_id
     dbUserId = db.session.query(models.USERS).filter_by(username=userName).first().username_id
@@ -24,20 +24,12 @@ def getUserStockDataFromDB(data, db):
         dataRes['quantity'] = quantity
         dataRes['averagePrice'] = averagePrice
         dataRes['currentPrice'] = currentPrice
-        #FINAL RETURN DICT TO STORE DATA LIKE 
+        #FINAL RETURN DICT TO STORE DATA LIKE
         response[stock] = dataRes
-        
+
     return response
-    
+
 def getCashBalance(data, db):
-    response = dict()
-    
     userName = data['userName']
-    
-    userId = db.session.query(models.USERS).filter_by(username=userName).first().username_id
     cashBalance = db.session.query(models.USERS).filter_by(username=userName).first().cash_balance
-    
-    response['cashBalance'] = cashBalance
-    response['userId'] = userId
-    
-    return response
+    return cashBalance
