@@ -1,35 +1,36 @@
-import React, { useState, useRef, useEffect } from 'react';
+import React, { useState, useEffect } from 'react';
 import './App.css';
 import io from 'socket.io-client';
+import { Login } from './Login'; // eslint-disable-line
+import { Logout } from './Logout'; // eslint-disable-line
 import { StockSearch } from './StockSearch';
 
 export const socket = io();
 
 function App() {
-  const [thisUser, updateUser] = useState('');
-  const inputUser = useRef('');
+  const [thisUser, updateUser] = useState(''); // thisUser variable contains user email
+  const [fullName, updateName] = useState(''); // fullName variable contains user's first and last name
   const [inSearchScreen, setInSearchScreen] = useState(false);
-  function onButtonClick() {
-    if (inputUser.current.value !== '') {
-      const user = inputUser.current.value;
-      updateUser(user);
-      socket.emit('login', { currentUser: user });
-      // console.log('emitted');
-    }
-  }
 
   useEffect(() => {
     socket.on('login', (data) => {
       console.log('login registered');
       console.log(data.added);
+      console.log(data.name);
+      updateUser(data.user);
+      updateName(data.name);
     });
   }, []);
 
-  function logout() {
-    if (thisUser !== '') {
-      updateUser('');
-    }
-  }
+  useEffect(() => {
+    socket.on('logout', (data) => {
+      console.log('logout success');
+      console.log(data.added);
+      console.log(data.name);
+      updateUser(data.user);
+      updateName(data.name);
+    });
+  }, []);
 
   const hellotext = 'Hello ';
 
@@ -37,12 +38,9 @@ function App() {
     return (
       <div className="wrapper-input">
         <div>
-          <input type="text" ref={inputUser} placeholder="username" required />
-          <div style={{ paddingTop: 10 }}>
-            <button type="button" onClick={onButtonClick}>
-              <h3>Log In</h3>
-            </button>
-          </div>
+          <h1>Welcome to Paperbull</h1>
+          <h3>Sign in with google</h3>
+          <Login />
         </div>
       </div>
     );
@@ -53,9 +51,10 @@ function App() {
   return (
     <div className="wrapper">
       <div>
+
         <h1>
           {hellotext}
-          {thisUser}
+          {fullName}
         </h1>
         <h3>Let&#39;s start investing</h3>
       </div>
@@ -71,9 +70,8 @@ function App() {
         <h1>BUY/SELL A STOCK!</h1>
       </div>
       <div style={{ paddingTop: 10 }}>
-        <button type="button" onClick={logout}>
-          <h3>Log Out </h3>
-        </button>
+
+        <Logout />
       </div>
     </div>
   );

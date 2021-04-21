@@ -23,7 +23,10 @@ db.create_all()
 
 cors = CORS(APP, resources={r"/*": {"origins": "*"}})
 
-socketio = SocketIO(APP, cors_allowed_origins="*", json=json, manage_session=False)
+socketio = SocketIO(APP,
+                    cors_allowed_origins="*",
+                    json=json,
+                    manage_session=False)
 
 
 @APP.route("/", defaults={"filename": "index.html"})
@@ -80,13 +83,31 @@ def on_login(data):
     """Occurs when user logs in"""
     print("Something Happened")
     print(str(data))
-    print(data["currentUser"])
-    exists = bool(models.USERS.query.filter_by(username=data["currentUser"]).first())
+    print(data['currentUser'])
+    print(data['userRealName'])
+    exists = bool(
+        models.USERS.query.filter_by(username=data['currentUser']).first())
     if not exists:
         added = add_user(data["currentUser"])
         print("Added a new user")
-        socketio.emit("login", {"added": added}, broadcast=True, include_self=True)
+    socketio.emit('login', {
+        'user': data['currentUser'],
+        'name': data['userRealName']
+    },
+                  broadcast=True,
+                  include_self=True)
     return True
+
+
+@socketio.on('logout')
+def on_logout(data):
+    """Occurs when user logs out"""
+    socketio.emit('logout', {
+        'user': data['currentUser'],
+        'name': data['userRealName']
+    },
+                  broadcast=True,
+                  include_self=True)
 
 
 def add_user(user):
@@ -102,5 +123,4 @@ if __name__ == "__main__":
         APP,
         host=os.getenv("IP", "0.0.0.0"),
         port=8081 if os.getenv("C9_PORT") else int(os.getenv("PORT", 8081)),
-        debug=True,
     )
