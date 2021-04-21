@@ -13,8 +13,6 @@ function UserProfile({userName, totalAssetsOwned, cashBal}) {
     
     function getTotalAssets(){
         let amountChange = parseInt(cashBal) + parseInt(totalAssetsOwned)
-        console.log(cashBal)
-        console.log(totalAssetsOwned)
         return amountChange.toFixed(2)
     }
     return (

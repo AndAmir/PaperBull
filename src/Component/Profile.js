@@ -14,20 +14,9 @@ function Portfolio({userName}){
     const UPDATE_TABLE = 20;
     const [ userPortfolio, setUserPortfolio] = useState({});
     const [userCashBalance, setUserCashBalance] = useState(0);
+    const [userId, setUserID] = useState(0);
     
-    
-
     userName = "Test";
-    // const userPortfolio = {
-    //     'UBER': {'quantity': 10, 'averagePrice': 32.08, 'currentPrice' : 60},
-    //     'GOOG' : {'quantity': 0.35, 'averagePrice': 1499.66, 'currentPrice' : 2297},
-    //     'IVR'  : {'quantity': 400, 'averagePrice': 3.98, 'currentPrice' : 3.81},
-    //     'NIO'  : {'quantity': 78.2, 'averagePrice': 6.69, 'currentPrice' : 35.54},
-    //     'T'  : {'quantity': 50, 'averagePrice': 29.90, 'currentPrice' : 30.02},
-    //     'TRTX'  : {'quantity': 270, 'averagePrice': 5.68, 'currentPrice' : 11.64},
-    //     'RCL'  : {'quantity': 40, 'averagePrice': 31.41, 'currentPrice' : 85.30},
-    //     'AAPL'  : {'quantity': 10, 'averagePrice': 96.66, 'currentPrice' : 134.46},
-    // };
     
     function goToInvestingPage(){
         if(userState){
@@ -70,8 +59,8 @@ function Portfolio({userName}){
         
         socket.emit('updateCashBalance', {'userName' : userName}, (response) =>{
            if(!(response.error)) {
-               console.log(response);
-               setUserCashBalance(response);
+               setUserCashBalance(response['cashBalance']);
+               setUserID(response['userId']);
            } 
            else{
                 console.error("Couldn't get data from server", response.error);
@@ -135,7 +124,7 @@ function Portfolio({userName}){
             )}
             </div>
             <div className="startInvesting">
-                        <button className="startInvestingButton" type="submit" onClick={goToInvestingPage}> Let's Start Investing </button>
+                <button className="startInvestingButton" type="submit" onClick={goToInvestingPage}> Let's Start Investing </button>
             </div>
         </div>
     );
