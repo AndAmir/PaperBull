@@ -34,6 +34,7 @@ export function StockSearch(props) {
         ref={inputTicker}
         placeholder="Enter Ticker Symbol..."
         onKeyPress={(e) => e.key === 'Enter' && search()}
+        id="ticker_search"
         required
       />
 
@@ -100,5 +101,5 @@ export function StockSearch(props) {
 }
 export default StockSearch;
 StockSearch.propTypes = {
-  userID: PropTypes.string.isRequired,
+  userID: PropTypes.number.isRequired,
 };
