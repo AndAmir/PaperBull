@@ -1,0 +1,29 @@
+{
+  "env": {
+    "browser": true,
+    "es2021": true
+  },
+  "extends": ["plugin:react/recommended", "airbnb"],
+  "overrides": [
+    {
+      "files": ["*.js"],
+      "rules": {
+        "react/no-array-index-key": "off",
+        "react-hooks/exhaustive-deps": "off",
+        "react/jsx-filename-extension": "off",
+        "import/no-cycle": "off",
+        "max-len": "off"
+      }
+    }
+  ],
+  "parser": "babel-eslint",
+  "parserOptions": {
+    "ecmaFeatures": {
+      "jsx": true
+    },
+    "ecmaVersion": 12,
+    "sourceType": "module"
+  },
+  "plugins": ["react"],
+  "rules": {}
+}
