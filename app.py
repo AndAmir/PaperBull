@@ -1,6 +1,7 @@
 """Flask Backend"""
 import os
 import stock_transaction_implementation as stock_transaction
+import update_profile as up
 from flask import Flask, send_from_directory, json
 from flask_socketio import SocketIO
 from flask_cors import CORS
@@ -63,6 +64,17 @@ def request_user_stock_info(data):
 @socketio.on("processTransaction")
 def process_transaction(data):
     return stock_transaction.process_transaction_implementation(data, db)
+    
+@socketio.on('updatePortfolio')
+def updatePortfolio(data):
+    print(data)
+    return up.getUserStockDataFromDB(data, db)
+    
+@socketio.on('updateCashBalance')
+def updateCashBalance(data):
+    print(data)
+    return up.getCashBalance(data, db)
+    
 
 
 @socketio.on("requestStockHistory")
@@ -85,6 +97,8 @@ def on_login(data):
     print(str(data))
     print(data['currentUser'])
     print(data['userRealName'])
+    if not validateEmail(data['currentUser']):
+        return False
     exists = bool(
         models.USERS.query.filter_by(username=data['currentUser']).first())
     if not exists:
@@ -98,6 +112,9 @@ def on_login(data):
                   include_self=True)
     return True
 
+def validateEmail(email):
+    if "@" in email: return True
+    return False
 
 @socketio.on('logout')
 def on_logout(data):
@@ -123,4 +140,6 @@ if __name__ == "__main__":
         APP,
         host=os.getenv("IP", "0.0.0.0"),
         port=8081 if os.getenv("C9_PORT") else int(os.getenv("PORT", 8081)),
+        debug=True
     )
+    

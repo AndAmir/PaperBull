@@ -7,8 +7,6 @@ test('Search Stock', () => {
   expect(screen.getByDisplayValue('Enter Ticker Symbol...').id).toBe('ticker_search');
   fireEvent.click(loginButtonElement);
   expect(loginButtonElement).not.toBeInTheDocument();
-});
-
 // test('Board Appears', () => {
 //   const result = render(<App />);
 //   const loginButtonElement = screen.getByText('Login');
@@ -29,3 +27,6 @@ test('Leaderboard Shows', () => {
   // const leaderboard = screen.getByTestId("Leaderboard");
   // expect(leaderboard).toHaveReturnedWith(true);
 });
+
+
+);

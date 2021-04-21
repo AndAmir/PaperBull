@@ -1,70 +1,31 @@
-# Getting Started with Create React App
+# Paperbull
 
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+### Paperbull is an online papertrading application designed to provide users with a cohesive stock trading experience. Users can log in with google and create their own profiles as they grow their virtual assets.
 
-## Available Scripts
+## Requirements
 
-In the project directory, you can run:
+1. `npm install`
+2. `pip install -r requirements.txt`
 
-### `npm start`
+## Linting
 
-Runs the app in the development mode.\
-Open [http://localhost:3000](http://localhost:3000) to view it in the browser.
+### The following files were ignored:
+1. app.test.js
+2. index.js
+3. reportWebVitals.js
+4. setupTests.js
+5. canvasjs.min.js
+6. canvasjs.react.js
 
-The page will reload if you make edits.\
-You will also see any lint errors in the console.
+These files were not part of our main application, and therefore did not need to be linted.
 
-### `npm test`
 
-Launches the test runner in the interactive watch mode.\
-See the section about [running tests](https://facebook.github.io/create-react-app/docs/running-tests) for more information.
+### The following linting errors were ignored:
+`disable=E1101,W1508,C0413,C0103`
 
-### `npm run build`
+1. `E1101` is an error stating that an object had a non-existant member.
+2. `W1508` is an error relating to environment variables, and was not necessary.
+3. `C0413` is a wrong import position error, and prevents us from correctly importing modules.
+4. `C0103` is a variable nomenclature error, detailing that our database variable was not correctly named; however the name was part of our naming scheme across the team.
 
-Builds the app for production to the `build` folder.\
-It correctly bundles React in production mode and optimizes the build for the best performance.
-
-The build is minified and the filenames include the hashes.\
-Your app is ready to be deployed!
-
-See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
-
-### `npm run eject`
-
-**Note: this is a one-way operation. Once you `eject`, you can’t go back!**
-
-If you aren’t satisfied with the build tool and configuration choices, you can `eject` at any time. This command will remove the single build dependency from your project.
-
-Instead, it will copy all the configuration files and the transitive dependencies (webpack, Babel, ESLint, etc) right into your project so you have full control over them. All of the commands except `eject` will still work, but they will point to the copied scripts so you can tweak them. At this point you’re on your own.
-
-You don’t have to ever use `eject`. The curated feature set is suitable for small and middle deployments, and you shouldn’t feel obligated to use this feature. However we understand that this tool wouldn’t be useful if you couldn’t customize it when you are ready for it.
-
-## Learn More
-
-You can learn more in the [Create React App documentation](https://facebook.github.io/create-react-app/docs/getting-started).
-
-To learn React, check out the [React documentation](https://reactjs.org/).
-
-### Code Splitting
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/code-splitting](https://facebook.github.io/create-react-app/docs/code-splitting)
-
-### Analyzing the Bundle Size
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size](https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size)
-
-### Making a Progressive Web App
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app](https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app)
-
-### Advanced Configuration
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/advanced-configuration](https://facebook.github.io/create-react-app/docs/advanced-configuration)
-
-### Deployment
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/deployment](https://facebook.github.io/create-react-app/docs/deployment)
-
-### `npm run build` fails to minify
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify](https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify)
+These errors were inhibiting the team from running our code and collaborating effectively.
