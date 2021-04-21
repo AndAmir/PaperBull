@@ -30,6 +30,14 @@ def getUserStockDataFromDB(data, db):
     return response
 
 def getCashBalance(data, db):
+    response = dict()
+    
     userName = data['userName']
+    
+    userId = db.session.query(models.USERS).filter_by(username=userName).first().username_id
     cashBalance = db.session.query(models.USERS).filter_by(username=userName).first().cash_balance
-    return cashBalance
+    
+    response['cashBalance'] = cashBalance
+    response['userId'] = userId
+    
+    return response

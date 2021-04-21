@@ -18,12 +18,13 @@ export function StockSearch(props) {
   }
 
   function transaction(type) {
+    setDisplayStockTransaction(true);
     if (type === 'buy') {
       setIsBuy(true);
     } else if (type === 'sell') {
       setIsSell(true);
     }
-    console.log('transaction');
+    console.log('transaction', userID);
   }
 
   return (
@@ -44,20 +45,26 @@ export function StockSearch(props) {
           {displayStockTransaction ? (
             <div>
               {isBuy && (
+              <>
+                <h1>Buy</h1>
                 <StockTransaction
                   transactionMode={STOCK_TRANSACTION_MODES.buy}
-                  userid={userID}
-                  tickerSymbol={inputTicker}
+                  userId={userID}
+                  tickerSymbol={inputTicker.current.value}
                   displayComponentFunc={setDisplayStockTransaction}
                 />
+              </>
               )}
               {isSell && (
+              <>
+                <h1>Sell</h1>
                 <StockTransaction
                   transactionMode={STOCK_TRANSACTION_MODES.sell}
-                  userid={userID}
-                  tickerSymbol={inputTicker}
+                  userId={userID}
+                  tickerSymbol={inputTicker.current.value}
                   displayComponentFunc={setDisplayStockTransaction}
                 />
+              </>
               )}
             </div>
           ) : (

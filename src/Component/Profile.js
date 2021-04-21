@@ -13,6 +13,7 @@ function Profile({ userName }) {
   const UPDATE_TABLE = 20;
   const [userPortfolio, setUserPortfolio] = useState({});
   const [userCashBalance, setUserCashBalance] = useState(0);
+  const [userID, setUserID] = useState(0);
 
   function goToInvestingPage() {
     if (showStockSearch) {
@@ -55,7 +56,8 @@ function Profile({ userName }) {
 
     socket.emit('updateCashBalance', { userName }, (response) => {
       if (!(response.error)) {
-        setUserCashBalance(response);
+        setUserCashBalance(response.cashBalance);
+        setUserID(response.userId);
       } else {
         console.error("Couldn't get data from server", response.error);
       }
@@ -83,6 +85,7 @@ function Profile({ userName }) {
           <div>
             <StockSearch
               displayComponentFunc={setShowStockSearch}
+              userID={userID}
             />
           </div>
         ) : (
