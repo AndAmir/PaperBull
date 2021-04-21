@@ -23,4 +23,9 @@ These files were not part of our main application, and therefore did not need to
 ### The following linting errors were ignored:
 `disable=E1101,W1508,C0413,C0103`
 
-These errors were inhibiting the team from running their code. For example, some of the above linting errors forced us to include `import models` at the top of the file, while it should be included after the db variable is initialized.
+1. `E1101` is an error stating that an object had a non-existant member.
+2. `W1508` is an error relating to environment variables, and was not necessary.
+3. `C0413` is a wrong import position error, and prevents us from correctly importing modules.
+4. `C0103` is a variable nomenclature error, detailing that our database variable was not correctly named; however the name was part of our naming scheme across the team.
+
+These errors were inhibiting the team from running our code and collaborating effectively.
