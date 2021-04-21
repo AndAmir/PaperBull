@@ -1,3 +1,5 @@
+`https://tranquil-beach-81072.herokuapp.com/`
+
 # Paperbull
 
 ### Paperbull is an online papertrading application designed to provide users with a cohesive stock trading experience. Users can log in with google and create their own profiles as they grow their virtual assets.
