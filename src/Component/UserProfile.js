@@ -1,4 +1,3 @@
-import { useState } from 'react';
 import './UserProfile.css';
 
 function UserProfile({userName, totalAssetsOwned, cashBal}) {

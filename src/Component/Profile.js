@@ -35,9 +35,9 @@ function Portfolio({userName}){
     
     function countTotalAssetsOwned(){
         let totalAssetsOwned = 0;
-        Object.keys(userPortfolio).map((key)=> {
+        for (const [key] of Object.entries(userPortfolio)){
             totalAssetsOwned += (userPortfolio[key]['quantity'] * userPortfolio[key]['currentPrice']);
-        });
+        }
         totalAssetsOwned = totalAssetsOwned.toFixed(2);
         return totalAssetsOwned;
     }
@@ -58,11 +58,11 @@ function Portfolio({userName}){
         });
         
         socket.emit('updateCashBalance', {'userName' : userName}, (response) =>{
-           if(!(response.error)) {
-               setUserCashBalance(response['cashBalance']);
-               setUserID(response['userId']);
-           } 
-           else{
+          if(!(response.error)) {
+              setUserCashBalance(response['cashBalance']);
+              setUserID(response['userId']);
+          } 
+          else{
                 console.error("Couldn't get data from server", response.error);
             }
         });
@@ -76,7 +76,7 @@ function Portfolio({userName}){
     }
     
     useEffect(() => {
-        updatePortfolioandCashBalance();
+        updatePortfolioandCashBalance()
     }, [refreshData]);
     
     return (
