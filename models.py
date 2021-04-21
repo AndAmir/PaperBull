@@ -28,9 +28,8 @@ class STOCKS(DB.Model):
     __tablename__ = "STOCKS"
 
     def __repr__(self):
-        return "<Player %r>" % self.username
-
-
+        return '<Player %r>' % self.username_id
+        
 # action_type IS EITHER "buy" or "sell"
 class HISTORY(DB.Model):
     history_instance_id = DB.Column(
@@ -47,4 +46,4 @@ class HISTORY(DB.Model):
     __tablename__ = "HISTORY"
 
     def __repr__(self):
-        return "<Player %r>" % self.username
+        return "<Player %r>" % self.username_id
