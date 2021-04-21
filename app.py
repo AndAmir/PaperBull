@@ -9,57 +9,76 @@ from dotenv import load_dotenv, find_dotenv
 
 load_dotenv(find_dotenv())
 
-APP = Flask(__name__, static_folder='./build/static')
+APP = Flask(__name__, static_folder="./build/static")
 
-APP.config['SQLALCHEMY_DATABASE_URI'] = os.getenv('DATABASE_URL')
+APP.config["SQLALCHEMY_DATABASE_URI"] = os.getenv("DATABASE_URL")
 
-APP.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
+APP.config["SQLALCHEMY_TRACK_MODIFICATIONS"] = False
 
 db = SQLAlchemy(APP)
 
 import models
+
 db.create_all()
 
 cors = CORS(APP, resources={r"/*": {"origins": "*"}})
 
-socketio = SocketIO(
-    APP,
-    cors_allowed_origins="*",
-    json=json,
-    manage_session=False
-)
+socketio = SocketIO(APP,
+                    cors_allowed_origins="*",
+                    json=json,
+                    manage_session=False)
 
-@APP.route('/', defaults={"filename": "index.html"})
-@APP.route('/<path:filename>')
+
+@APP.route("/", defaults={"filename": "index.html"})
+@APP.route("/<path:filename>")
 def index(filename):
     """Default filename function"""
-    return send_from_directory('./build', filename)
+    return send_from_directory("./build", filename)
+
 
 # When a client connects from this Socket connection, this function is run
-@socketio.on('connect')
+@socketio.on("connect")
 def on_connect():
     """When a client connects from this Socket connection, this function is run"""
-    print('User connected!')
+    print("User connected!")
+
 
 # When a client disconnects from this Socket connection, this function is run
-@socketio.on('disconnect')
+@socketio.on("disconnect")
 def on_disconnect():
     """When a client disconnects from this Socket connection, this function is run"""
-    print('User disconnected!')
-    
-@socketio.on('pollStock')
+    print("User disconnected!")
+
+
+@socketio.on("pollStock")
 def poll_stock(data):
     return stock_transaction.poll_stock_implementation(data, db)
-    
-@socketio.on('requestUserStockInfo')
+
+
+@socketio.on("requestUserStockInfo")
 def request_user_stock_info(data):
     return stock_transaction.request_user_stock_info_implementation(data, db)
-    
-@socketio.on('processTransaction')
+
+
+@socketio.on("processTransaction")
 def process_transaction(data):
     return stock_transaction.process_transaction_implementation(data, db)
 
-@socketio.on('login')
+
+@socketio.on("requestStockHistory")
+def processStockHistory(data):
+    print("Got Stock History Request!", data)
+    return stock_transaction.request_ticker_history({"ticker": data})
+
+
+@socketio.on("searchTicker")
+def on_searchTicker(data):
+    print("SEACHING TICKER")
+    ticker = data["ticker"]
+    socketio.emit("changeStockHistoryChart", {"ticker": ticker})
+
+
+@socketio.on("login")
 def on_login(data):
     """Occurs when user logs in"""
     print("Something Happened")
@@ -69,17 +88,24 @@ def on_login(data):
     exists = bool(
         models.USERS.query.filter_by(username=data['currentUser']).first())
     if not exists:
-        added = add_user(data['currentUser'])
+        added = add_user(data["currentUser"])
         print("Added a new user")
-    socketio.emit('login', {'user' : data['currentUser'], 'name' : data['userRealName']},
+    socketio.emit('login', {
+        'user': data['currentUser'],
+        'name': data['userRealName']
+    },
                   broadcast=True,
                   include_self=True)
     return True
 
+
 @socketio.on('logout')
 def on_logout(data):
     """Occurs when user logs out"""
-    socketio.emit('logout', {'user' : data['currentUser'], 'name' : data['userRealName']},
+    socketio.emit('logout', {
+        'user': data['currentUser'],
+        'name': data['userRealName']
+    },
                   broadcast=True,
                   include_self=True)
 
@@ -92,11 +118,9 @@ def add_user(user):
     return True
 
 
-
 if __name__ == "__main__":
     socketio.run(
         APP,
-        host=os.getenv('IP', '0.0.0.0'),
-        port=8081 if os.getenv('C9_PORT') else int(os.getenv('PORT', 8081)),
-        debug=True,
+        host=os.getenv("IP", "0.0.0.0"),
+        port=8081 if os.getenv("C9_PORT") else int(os.getenv("PORT", 8081)),
     )

@@ -3,14 +3,14 @@ import './App.css';
 import io from 'socket.io-client';
 import { Login } from './Login'; // eslint-disable-line
 import { Logout } from './Logout'; // eslint-disable-line
-// Disabled lienes because of a dependendency cycle; however, the login and logout components are
-// needed
+import { StockSearch } from './StockSearch';
 
 export const socket = io();
 
 function App() {
   const [thisUser, updateUser] = useState(''); // thisUser variable contains user email
   const [fullName, updateName] = useState(''); // fullName variable contains user's first and last name
+  const [inSearchScreen, setInSearchScreen] = useState(false);
 
   useEffect(() => {
     socket.on('login', (data) => {
@@ -45,7 +45,9 @@ function App() {
       </div>
     );
   }
-
+  if (inSearchScreen) {
+    return <StockSearch userID={thisUser} />;
+  }
   return (
     <div className="wrapper">
       <div>
@@ -55,6 +57,17 @@ function App() {
           {fullName}
         </h1>
         <h3>Let&#39;s start investing</h3>
+      </div>
+      <div
+        onClick={() => {
+          setInSearchScreen(true);
+        }}
+        onKeyPress={(e) => e.key === 'Enter' && setInSearchScreen(true)}
+        id="search_button"
+        role="button"
+        tabIndex={0}
+      >
+        <h1>BUY/SELL A STOCK!</h1>
       </div>
       <div style={{ paddingTop: 10 }}>
 
