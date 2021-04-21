@@ -1,5 +1,6 @@
 """Flask Backend"""
 import os
+import re
 import stock_transaction_implementation as stock_transaction
 import update_profile as up
 from flask import Flask, send_from_directory, json
@@ -12,7 +13,15 @@ load_dotenv(find_dotenv())
 
 APP = Flask(__name__, static_folder="./build/static")
 
-APP.config["SQLALCHEMY_DATABASE_URI"] = os.getenv("DATABASE_URL")
+URL = os.getenv("DATABASE_URL")  # or other relevant config var
+if URL.startswith("postgres://"):
+    URL = URL.replace("postgres://", "postgresql://", 1)
+    
+print(URL)
+
+APP.config["SQLALCHEMY_DATABASE_URI"] = URL
+
+
 
 APP.config["SQLALCHEMY_TRACK_MODIFICATIONS"] = False
 
