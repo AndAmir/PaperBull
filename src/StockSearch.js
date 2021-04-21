@@ -18,6 +18,8 @@ export function StockSearch(props) {
   }
 
   function transaction(type) {
+    console.log('userID', userID);
+    setDisplayStockTransaction(true);
     if (type === 'buy') {
       setIsBuy(true);
     } else if (type === 'sell') {
@@ -33,6 +35,7 @@ export function StockSearch(props) {
         ref={inputTicker}
         placeholder="Enter Ticker Symbol..."
         onKeyPress={(e) => e.key === 'Enter' && search()}
+        id="ticker_search"
         required
       />
 
@@ -46,16 +49,16 @@ export function StockSearch(props) {
               {isBuy && (
                 <StockTransaction
                   transactionMode={STOCK_TRANSACTION_MODES.buy}
-                  userid={userID}
-                  tickerSymbol={inputTicker}
+                  userId={parseInt(userID, 10)}
+                  tickerSymbol={inputTicker.current.value}
                   displayComponentFunc={setDisplayStockTransaction}
                 />
               )}
               {isSell && (
                 <StockTransaction
                   transactionMode={STOCK_TRANSACTION_MODES.sell}
-                  userid={userID}
-                  tickerSymbol={inputTicker}
+                  userId={parseInt(userID, 10)}
+                  tickerSymbol={inputTicker.current.value}
                   displayComponentFunc={setDisplayStockTransaction}
                 />
               )}
@@ -93,5 +96,5 @@ export function StockSearch(props) {
 }
 export default StockSearch;
 StockSearch.propTypes = {
-  userID: PropTypes.string.isRequired,
+  userID: PropTypes.number.isRequired,
 };
