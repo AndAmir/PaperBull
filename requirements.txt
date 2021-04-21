@@ -2,7 +2,8 @@ stockquotes
 beautifulsoup4
 lxml
 Flask
-flask_socketio
+flask_SocketIO
 psycopg2
-flask_sqlalchemy
+Flask-SQLAlchemy
 python-dotenv
+Flask-Cors
