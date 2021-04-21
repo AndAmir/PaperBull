@@ -65,3 +65,7 @@
 .wrapper-input h3 {
   color: white;
 }
+
+#search_button {
+  background: #1ee235;
+}
