@@ -22,4 +22,5 @@ These files were not part of our main application, and therefore did not need to
 
 ### The following linting errors were ignored:
 `disable=E1101,W1508,C0413,C0103`
+
 These errors were inhibiting the team from running their code. For example, some of the above linting errors forced us to include `import models` at the top of the file, while it should be included after the db variable is initialized.
