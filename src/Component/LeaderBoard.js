@@ -8,7 +8,7 @@ function LeaderBoard() {
   const [gameLeaderBoard, setLeaderBoard] = useState();
   const [refreshData, resetRefreshData] = useState(false);
   const [showTable, setShowTable] = useState(false);
-  const UPDATE_TABLE = 30;
+  const UPDATE_TABLE = 60;
 
   function resetRefresh() {
     resetRefreshData(!refreshData);
