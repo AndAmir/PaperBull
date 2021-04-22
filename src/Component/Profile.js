@@ -7,7 +7,7 @@ import { StockSearch } from '../StockSearch';
 
 const socket = io();
 
-function Profile({ userName }) {
+function Profile({ userName, userEmail, userImage }) {
   const [showStockSearch, setShowStockSearch] = useState(false);
   const [refreshData, resetRefreshData] = useState(false);
   const UPDATE_TABLE = 20;
@@ -31,10 +31,9 @@ function Profile({ userName }) {
 
   function countTotalAssetsOwned() {
     let totalAssetsOwned = 0;
-    // for (const [key] of Object.entries(userPortfolio)) {
-    //   totalAssetsOwned += (userPortfolio[key].quantity * userPortfolio[key].currentPrice);
-    // }
-    Object.keys(userPortfolio).forEach((key) => { totalAssetsOwned += (userPortfolio[key].quantity * userPortfolio[key].currentPrice); });
+    Object.keys(userPortfolio).forEach((key) => {
+      totalAssetsOwned += (userPortfolio[key].quantity * userPortfolio[key].currentPrice);
+    });
 
     totalAssetsOwned = totalAssetsOwned.toFixed(2);
     return totalAssetsOwned;
@@ -45,7 +44,7 @@ function Profile({ userName }) {
   }
 
   function updatePortfolioandCashBalance() {
-    socket.emit('updatePortfolio', { userName }, (response) => {
+    socket.emit('updatePortfolio', { userEmail }, (response) => {
       if (!('error' in response)) {
         console.log(response);
         setUserPortfolio(response);
@@ -54,7 +53,7 @@ function Profile({ userName }) {
       }
     });
 
-    socket.emit('updateCashBalance', { userName }, (response) => {
+    socket.emit('updateCashBalance', { userEmail }, (response) => {
       if (!(response.error)) {
         setUserCashBalance(response.cashBalance);
         setUserID(response.userId);
@@ -78,7 +77,7 @@ function Profile({ userName }) {
   return (
     <div className="Profile">
       <div>
-        <UserProfile userName={userName} totalAssetsOwned={countTotalAssetsOwned()} cashBal={userCashBalance} />
+        <UserProfile userImage={userImage} userName={userName} totalAssetsOwned={countTotalAssetsOwned()} cashBal={userCashBalance} />
       </div>
       <div className="profile">
         {(showStockSearch) ? (
@@ -94,7 +93,7 @@ function Profile({ userName }) {
               <table>
                 <thead>
                   <tr>
-                    <th colSpan="3">
+                    <th colSpan="6">
                       {' '}
                       {userName}
                       &apos; Investments
@@ -115,33 +114,23 @@ function Profile({ userName }) {
                   {Object.keys(userPortfolio).map((key) => (
                     <tr>
                       <td>
-                        {' '}
                         {key}
-                        {' '}
                       </td>
                       <td>
-                        {' '}
                         {userPortfolio[key].quantity}
                       </td>
                       <td>
-                        {' '}
-                        {userPortfolio[key].averagePrice}
+                        {userPortfolio[key].averagePrice.toFixed(2)}
                       </td>
                       <td>
-                        {' '}
-                        {userPortfolio[key].currentPrice}
-                        {' '}
+                        {userPortfolio[key].currentPrice.toFixed(2)}
                       </td>
                       <td>
-                        {' '}
                         {(userPortfolio[key].quantity * userPortfolio[key].currentPrice).toFixed(2)}
                       </td>
                       <td>
-                        {' '}
                         {getPercentChange(userPortfolio[key].averagePrice, userPortfolio[key].currentPrice)}
-                        {' '}
                         %
-                        {' '}
                       </td>
 
                     </tr>
@@ -160,6 +149,8 @@ function Profile({ userName }) {
 }
 Profile.propTypes = {
   userName: PropTypes.string.isRequired,
+  userImage: PropTypes.string.isRequired,
+  userEmail: PropTypes.string.isRequired,
 };
 
 export default Profile;

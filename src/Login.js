@@ -10,7 +10,10 @@ export function Login() {
     console.log('[Login Success] currentUser:', res.profileObj);
     const userEmail = res.profileObj.email;
     const nameOfUser = res.profileObj.name;
-    socket.emit('login', { currentUser: userEmail, userRealName: nameOfUser });
+    const profileImage = res.profileObj.imageUrl;
+    console.log(profileImage);
+    console.log(nameOfUser);
+    socket.emit('login', { currentUser: userEmail, userRealName: nameOfUser, userImageUrl: profileImage });
   };
   const onFailure = (res) => {
     console.log('[Login failed] res:', res);

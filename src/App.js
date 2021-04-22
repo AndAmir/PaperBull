@@ -9,14 +9,17 @@ export const socket = io();
 function App() {
   const [thisUser, updateUser] = useState(''); // thisUser variable contains user email
   const [fullName, updateName] = useState(''); // fullName variable contains user's first and last name
-  console.log(fullName);
+  const [imageURL, setImageURL] = useState('');
+
   useEffect(() => {
     socket.on('login', (data) => {
       console.log('login registered');
       console.log(data.added);
       console.log(data.name);
+      console.log(data.image);
       updateUser(data.user);
       updateName(data.name);
+      setImageURL(data.image);
     });
   }, []);
 
@@ -25,10 +28,14 @@ function App() {
       console.log('logout success');
       console.log(data.added);
       console.log(data.name);
+      console.log(data.image);
       updateUser(data.user);
       updateName(data.name);
+      setImageURL(data.image);
     });
   }, []);
+
+  console.log(thisUser);
 
   if (thisUser === '') {
     return (
@@ -44,7 +51,7 @@ function App() {
 
   return (
     <div className="wrapper">
-      <Profile userName={thisUser} />
+      <Profile userName={fullName} userEmail={thisUser} userImage={imageURL} />
     </div>
   );
 }

@@ -6,7 +6,7 @@ def getUserStockDataFromDB(data, db):
 
     response = dict()
 
-    userName = data['userName']
+    userName = data['userEmail']
     # get the users username_id
     dbUserId = db.session.query(models.USERS).filter_by(username=userName).first().username_id
     #get the stocks owned by that user to get their potential assets
@@ -16,14 +16,14 @@ def getUserStockDataFromDB(data, db):
         stock = tableData.ticker
         quantity = tableData.quantity
         averagePrice = tableData.avg_price
-        # quantity = db.session.query(models.STOCKS).filter_by(username_id=dbUserId).filter_by(ticker=stock).quantity
-        # averagePrice = db.session.query(models.STOCKS).filter_by(username_id=dbUserId).filter_by(ticker=stock).avg_price
         currentPrice = stock_transaction.helper_get_stock_price(stock)
+        
         # DICT TO STORE DATA LIKE: {'quantity': 10, 'averagePrice': 32.08, 'currentPrice' : 60}
         dataRes = dict()
         dataRes['quantity'] = quantity
         dataRes['averagePrice'] = averagePrice
         dataRes['currentPrice'] = currentPrice
+        
         #FINAL RETURN DICT TO STORE DATA LIKE
         response[stock] = dataRes
 
@@ -32,7 +32,7 @@ def getUserStockDataFromDB(data, db):
 def getCashBalance(data, db):
     response = dict()
     
-    userName = data['userName']
+    userName = data['userEmail']
     
     userId = db.session.query(models.USERS).filter_by(username=userName).first().username_id
     cashBalance = db.session.query(models.USERS).filter_by(username=userName).first().cash_balance
