@@ -21,7 +21,7 @@ function UserProfile({
   return (
     <div className="userProfileHeader">
       <div className="profileImage">
-        <img src={userImage} alt="" />
+        <img src={userImage} alt="" className="userImage" />
       </div>
       <div className="profileName">
         <p>{userName}</p>
