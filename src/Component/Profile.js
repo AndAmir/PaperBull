@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import PropTypes from 'prop-types';
 import io from 'socket.io-client';
 import './Profile.css';
-import { UserProfile } from '.';
+import { UserProfile, LeaderBoard } from '.';
 import { StockSearch } from '../StockSearch';
 
 const socket = io();
@@ -10,7 +10,7 @@ const socket = io();
 function Profile({ userName, userEmail, userImage }) {
   const [showStockSearch, setShowStockSearch] = useState(false);
   const [refreshData, resetRefreshData] = useState(false);
-  const UPDATE_TABLE = 20;
+  const UPDATE_TABLE = 60;
   const [userPortfolio, setUserPortfolio] = useState({});
   const [userCashBalance, setUserCashBalance] = useState(0);
   const [userID, setUserID] = useState(0);
@@ -136,24 +136,7 @@ function Profile({ userName, userEmail, userImage }) {
               </table>
             </div>
             <div className="column">
-              <table>
-                <tr>
-                  <th>First Name</th>
-                  <th>Last Name</th>
-                </tr>
-                <tr>
-                  <td>Jill</td>
-                  <td>Smith</td>
-                </tr>
-                <tr>
-                  <td>Eve</td>
-                  <td>Jackson</td>
-                </tr>
-                <tr>
-                  <td>Adam</td>
-                  <td>Johnson</td>
-                </tr>
-              </table>
+              <LeaderBoard />
             </div>
           </div>
         )}

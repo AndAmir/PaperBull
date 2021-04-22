@@ -74,6 +74,11 @@ def updateCashBalance(data):
     print(data)
     return up.getCashBalance(data, db)
     
+@socketio.on('updateLeaderBoard')
+def updateLeaderBoard(data):
+    print(data)
+    return up.updateLeaderBoard(db)
+    
 
 
 @socketio.on("requestStockHistory")

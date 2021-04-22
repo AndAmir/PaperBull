@@ -6,7 +6,6 @@ function UserProfile({
   userImage, userName, totalAssetsOwned, cashBal,
 }) {
   const DEFUALT_STARTING_AMOUNT = 10000;
-  console.log(userImage);
 
   function getPercentChange() {
     let percentChange = (((parseInt(cashBal, 10) + parseInt(totalAssetsOwned, 10)) - DEFUALT_STARTING_AMOUNT) / DEFUALT_STARTING_AMOUNT) * 100;
