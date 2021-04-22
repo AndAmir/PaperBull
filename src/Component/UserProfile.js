@@ -25,27 +25,23 @@ function UserProfile({
       </div>
       <div className="profileName">
         <p>{userName}</p>
-
-      </div>
-      <div>
-        <Logout />
       </div>
       <div className="userBalance">
-        <h4>
-          {' '}
+        <div>
+          <Logout />
+        </div>
+        <p>
           Total Assets: $
           {getTotalAssets()}
-          {' '}
           (
           {getPercentChange()}
           %)
-          {' '}
-        </h4>
-        <h4>
+        </p>
+        <p>
           {' '}
           Cash Balance: $
           {cashBal.toFixed(2)}
-        </h4>
+        </p>
       </div>
     </div>
   );

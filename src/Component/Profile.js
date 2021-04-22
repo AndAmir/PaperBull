@@ -75,11 +75,11 @@ function Profile({ userName, userEmail, userImage }) {
   }, [refreshData]);
 
   return (
-    <div className="Profile">
+    <div className="userProfile">
       <div>
         <UserProfile userImage={userImage} userName={userName} totalAssetsOwned={countTotalAssetsOwned()} cashBal={userCashBalance} />
       </div>
-      <div className="profile">
+      <div>
         {(showStockSearch) ? (
           <div>
             <StockSearch
@@ -88,16 +88,14 @@ function Profile({ userName, userEmail, userImage }) {
             />
           </div>
         ) : (
-          <div>
-            <div className="userPortfolio">
+          <div className="row">
+            <div className="column">
               <table>
                 <thead>
                   <tr>
-                    <th colSpan="6">
-                      {' '}
+                    <th colSpan="6" className="header">
                       {userName}
                       &apos; Investments
-                      {' '}
                     </th>
                   </tr>
                 </thead>
@@ -109,7 +107,6 @@ function Profile({ userName, userEmail, userImage }) {
                     <td> Current Value </td>
                     <td> Total Value </td>
                     <td> Percent Change </td>
-
                   </tr>
                   {Object.keys(userPortfolio).map((key) => (
                     <tr>
@@ -136,6 +133,26 @@ function Profile({ userName, userEmail, userImage }) {
                     </tr>
                   ))}
                 </tbody>
+              </table>
+            </div>
+            <div className="column">
+              <table>
+                <tr>
+                  <th>First Name</th>
+                  <th>Last Name</th>
+                </tr>
+                <tr>
+                  <td>Jill</td>
+                  <td>Smith</td>
+                </tr>
+                <tr>
+                  <td>Eve</td>
+                  <td>Jackson</td>
+                </tr>
+                <tr>
+                  <td>Adam</td>
+                  <td>Johnson</td>
+                </tr>
               </table>
             </div>
           </div>

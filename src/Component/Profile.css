@@ -1,15 +1,43 @@
-table, 
-td {
-    border: 1px solid #333;
+table {
+  border-collapse: collapse;
+  border-spacing: 0;
+  width: 100%;
+  border: 1px solid #ddd;
 }
 
-thead,
-tfoot {
-    background-color: #333;
-    color: #fff;
+th, td {
+  text-align: left;
+  padding: 16px;
 }
 
-.profile{
+tr:nth-child(even) {
+  background-color:rgb(130, 135, 136);
 }
 
+.row{
+    margin-left: -5px;
+    margin-right: -5px;
+    
+}
+LeaderBoard{
+    float:right;
+    width: 50%;
+    margin: auto;
+}
+
+.column{
+    float: left;
+    width: 50%;
+    padding: 5px;
+}
+
+.row::after {
+  content: "";
+  clear: both;
+  display: table;
+}
+
+.header{
+    background-color:rgb(130, 135, 136);
+}
 
