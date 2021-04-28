@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import PropTypes from 'prop-types';
 import io from 'socket.io-client';
 import './Profile.css';
-import { UserProfile, LeaderBoard } from '.';
+import { UserProfile } from '.';
 import { StockSearch } from '../StockSearch';
 
 const socket = io();
@@ -14,12 +14,30 @@ function Profile({ userName, userEmail, userImage }) {
   const [userPortfolio, setUserPortfolio] = useState({});
   const [userCashBalance, setUserCashBalance] = useState(0);
   const [userID, setUserID] = useState(0);
+  const [showLeaderBoard, setShowLeaderBoard] = useState(false);
+  const [gameLeaderBoard, setLeaderBoard] = useState([]);
+  const [showProfileTable, setshowProfileTable] = useState(false);
+  const [sortType, setSortType] = useState('asc');
 
   function goToInvestingPage() {
     if (showStockSearch) {
       setShowStockSearch(false);
     } else {
       setShowStockSearch(true);
+    }
+  }
+
+  function sortTable() {
+    if (sortType === 'asc') {
+      const leaderBoard = [...gameLeaderBoard];
+      leaderBoard.sort((a, b) => ((a.userCashBalance > b.userCashBalance) ? 1 : -1));
+      setLeaderBoard(leaderBoard);
+      setSortType('des');
+    } else {
+      const leaderBoard = [...gameLeaderBoard];
+      leaderBoard.sort((a, b) => ((a.userCashBalance < b.userCashBalance) ? 1 : -1));
+      setLeaderBoard(leaderBoard);
+      setSortType('asc');
     }
   }
 
@@ -46,8 +64,8 @@ function Profile({ userName, userEmail, userImage }) {
   function updatePortfolioandCashBalance() {
     socket.emit('updatePortfolio', { userEmail }, (response) => {
       if (!('error' in response)) {
-        console.log(response);
         setUserPortfolio(response);
+        setshowProfileTable(true);
       } else {
         console.error("Couldn't get data from server", response.error);
       }
@@ -57,6 +75,15 @@ function Profile({ userName, userEmail, userImage }) {
       if (!(response.error)) {
         setUserCashBalance(response.cashBalance);
         setUserID(response.userId);
+      } else {
+        console.error("Couldn't get data from server", response.error);
+      }
+    });
+
+    socket.emit('updateLeaderBoard', { UPDATE_TABLE }, (response) => {
+      if (!('error' in response)) {
+        setLeaderBoard(response);
+        setShowLeaderBoard(true);
       } else {
         console.error("Couldn't get data from server", response.error);
       }
@@ -90,53 +117,80 @@ function Profile({ userName, userEmail, userImage }) {
         ) : (
           <div className="row">
             <div className="column">
-              <table>
-                <thead>
-                  <tr>
-                    <th colSpan="6" className="header">
-                      {userName}
-                      &apos; Investments
-                    </th>
-                  </tr>
-                </thead>
-                <tbody>
-                  <tr>
-                    <td> Stock </td>
-                    <td> Quantity </td>
-                    <td> Average Price </td>
-                    <td> Current Value </td>
-                    <td> Total Value </td>
-                    <td> Percent Change </td>
-                  </tr>
-                  {Object.keys(userPortfolio).map((key) => (
+              { showProfileTable ? (
+                <table>
+                  <thead>
                     <tr>
-                      <td>
-                        {key}
-                      </td>
-                      <td>
-                        {userPortfolio[key].quantity}
-                      </td>
-                      <td>
-                        {userPortfolio[key].averagePrice.toFixed(2)}
-                      </td>
-                      <td>
-                        {userPortfolio[key].currentPrice.toFixed(2)}
-                      </td>
-                      <td>
-                        {(userPortfolio[key].quantity * userPortfolio[key].currentPrice).toFixed(2)}
-                      </td>
-                      <td>
-                        {getPercentChange(userPortfolio[key].averagePrice, userPortfolio[key].currentPrice)}
-                        %
-                      </td>
-
+                      <th colSpan="6" className="header">
+                        {userName}
+                        &apos; Investments
+                      </th>
                     </tr>
-                  ))}
-                </tbody>
-              </table>
+                  </thead>
+                  <tbody>
+                    <tr>
+                      <td> Stock </td>
+                      <td> Quantity </td>
+                      <td> Average Price </td>
+                      <td> Current Value </td>
+                      <td> Total Value </td>
+                      <td> Percent Change </td>
+                    </tr>
+                    {Object.keys(userPortfolio).map((key) => (
+                      <tr>
+                        <td>
+                          {key}
+                        </td>
+                        <td>
+                          {userPortfolio[key].quantity}
+                        </td>
+                        <td>
+                          {userPortfolio[key].averagePrice.toFixed(2)}
+                        </td>
+                        <td>
+                          {userPortfolio[key].currentPrice.toFixed(2)}
+                        </td>
+                        <td>
+                          {(userPortfolio[key].quantity * userPortfolio[key].currentPrice).toFixed(2)}
+                        </td>
+                        <td>
+                          {getPercentChange(userPortfolio[key].averagePrice, userPortfolio[key].currentPrice)}
+                          %
+                        </td>
+                      </tr>
+                    ))}
+                  </tbody>
+                </table>
+              ) : (null) }
             </div>
             <div className="column">
-              <LeaderBoard />
+              {(showLeaderBoard) ? (
+                <table className="sortable">
+                  <thead>
+                    <tr>
+                      <th onClick={sortTable} colSpan="2" className="header">
+                        LeaderBoard (Press to Sort)
+                      </th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <tr>
+                      <td> Name </td>
+                      <td> Total Assets </td>
+                    </tr>
+                    {gameLeaderBoard.map((item) => (
+                      <tr>
+                        <td>
+                          {item.userName}
+                        </td>
+                        <td>
+                          {item.userCashBalance.toFixed(2)}
+                        </td>
+                      </tr>
+                    ))}
+                  </tbody>
+                </table>
+              ) : (null)}
             </div>
           </div>
         )}
