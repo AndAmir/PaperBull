@@ -106,6 +106,9 @@ function Profile({ userName, userEmail, userImage }) {
       <div>
         <UserProfile userImage={userImage} userName={userName} totalAssetsOwned={countTotalAssetsOwned()} cashBal={userCashBalance} />
       </div>
+      <div className="startInvesting">
+        <button className="startInvestingButton" type="submit" onClick={goToInvestingPage}> Let&apos;s Start Investing </button>
+      </div>
       <div>
         {(showStockSearch) ? (
           <div>
@@ -115,8 +118,8 @@ function Profile({ userName, userEmail, userImage }) {
             />
           </div>
         ) : (
-          <div className="row">
-            <div className="column">
+          <div className="container">
+            <div className="tablePortfolio">
               { showProfileTable ? (
                 <table>
                   <thead>
@@ -130,11 +133,11 @@ function Profile({ userName, userEmail, userImage }) {
                   <tbody>
                     <tr>
                       <td> Stock </td>
-                      <td> Quantity </td>
-                      <td> Average Price </td>
-                      <td> Current Value </td>
-                      <td> Total Value </td>
-                      <td> Percent Change </td>
+                      <td> Qnty. </td>
+                      <td> Avg. </td>
+                      <td> Crnt. </td>
+                      <td> Total $</td>
+                      <td> Change</td>
                     </tr>
                     {Object.keys(userPortfolio).map((key) => (
                       <tr>
@@ -163,9 +166,9 @@ function Profile({ userName, userEmail, userImage }) {
                 </table>
               ) : (null) }
             </div>
-            <div className="column">
+            <div className="tableLeaderBoard">
               {(showLeaderBoard) ? (
-                <table className="sortable">
+                <table>
                   <thead>
                     <tr>
                       <th onClick={sortTable} colSpan="2" className="header">
@@ -176,7 +179,7 @@ function Profile({ userName, userEmail, userImage }) {
                   <tbody>
                     <tr>
                       <td> Name </td>
-                      <td> Total Assets </td>
+                      <td> Total $ </td>
                     </tr>
                     {gameLeaderBoard.map((item) => (
                       <tr>
@@ -194,9 +197,6 @@ function Profile({ userName, userEmail, userImage }) {
             </div>
           </div>
         )}
-      </div>
-      <div className="startInvesting">
-        <button className="startInvestingButton" type="submit" onClick={goToInvestingPage}> Let&apos;s Start Investing </button>
       </div>
     </div>
   );
