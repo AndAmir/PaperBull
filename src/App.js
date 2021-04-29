@@ -13,10 +13,6 @@ function App() {
 
   useEffect(() => {
     socket.on('login', (data) => {
-      console.log('login registered');
-      console.log(data.added);
-      console.log(data.name);
-      console.log(data.image);
       updateUser(data.user);
       updateName(data.name);
       setImageURL(data.image);
@@ -25,17 +21,11 @@ function App() {
 
   useEffect(() => {
     socket.on('logout', (data) => {
-      console.log('logout success');
-      console.log(data.added);
-      console.log(data.name);
-      console.log(data.image);
       updateUser(data.user);
       updateName(data.name);
       setImageURL(data.image);
     });
   }, []);
-
-  console.log(thisUser);
 
   if (thisUser === '') {
     return (

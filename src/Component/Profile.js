@@ -66,8 +66,6 @@ function Profile({ userName, userEmail, userImage }) {
       if (!('error' in response)) {
         setUserPortfolio(response);
         setshowProfileTable(true);
-      } else {
-        console.error("Couldn't get data from server", response.error);
       }
     });
 
@@ -75,8 +73,6 @@ function Profile({ userName, userEmail, userImage }) {
       if (!(response.error)) {
         setUserCashBalance(response.cashBalance);
         setUserID(response.userId);
-      } else {
-        console.error("Couldn't get data from server", response.error);
       }
     });
 
@@ -84,8 +80,6 @@ function Profile({ userName, userEmail, userImage }) {
       if (!('error' in response)) {
         setLeaderBoard(response);
         setShowLeaderBoard(true);
-      } else {
-        console.error("Couldn't get data from server", response.error);
       }
     });
 

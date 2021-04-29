@@ -18,6 +18,15 @@ tr:nth-child(even) {
   }
 }
 
+.tableLeaderBoard{
+  margin: auto;
+}
+
+.tablePortfolio{
+  margin-left: auto;
+  margin-right: auto;
+}
+
 .startInvesting{
   text-align: center;
 }
