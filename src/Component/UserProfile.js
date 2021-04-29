@@ -24,9 +24,6 @@ function UserProfile({ userName, totalAssetsOwned, cashBal }) {
         <p>{userName}</p>
 
       </div>
-      <div>
-        <Logout />
-      </div>
       <div className="userBalance">
         <h4>
           {' '}

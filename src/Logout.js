@@ -1,14 +1,23 @@
 import React from 'react';
+import PropTypes from 'prop-types';
 import { GoogleLogout } from 'react-google-login';
 import { socket } from './App'; // eslint-disable-line
 
 const { NODE_ENV } = process.env;
 const clientID = NODE_ENV === 'production' ? window.API_URL : process.env.REACT_APP_GOOGLE_CLIENT;
 
-export function Logout() {
+export function Logout({ updateUser, updateName }) {
   const onSuccess = () => {
-    alert('Logged out successfully');
-    socket.emit('logout', { currentUser: '', userRealName: '' });
+    socket.emit('logout',
+      { currentUser: '', userRealName: '' },
+      (response) => {
+        if ('error' in response) {
+          console.log(`Logout Error(${response.error})`);
+          return;
+        }
+        updateUser(response.user);
+        updateName(response.name);
+      });
   };
 
   return (
@@ -23,3 +32,7 @@ export function Logout() {
 }
 
 export default Logout;
+Logout.propTypes = {
+  updateUser: PropTypes.func.isRequired,
+  updateName: PropTypes.func.isRequired,
+};
