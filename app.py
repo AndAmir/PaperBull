@@ -24,10 +24,8 @@ db.create_all()
 
 cors = CORS(APP, resources={r"/*": {"origins": "*"}})
 
-socketio = SocketIO(APP,
-                    cors_allowed_origins="*",
-                    json=json,
-                    manage_session=False)
+socketio = SocketIO(APP, cors_allowed_origins="*", json=json, manage_session=False)
+
 
 @APP.route("/", defaults={"filename": "index.html"})
 @APP.route("/<path:filename>")
@@ -63,22 +61,24 @@ def request_user_stock_info(data):
 @socketio.on("processTransaction")
 def process_transaction(data):
     return stock_transaction.process_transaction_implementation(data, db)
-    
-@socketio.on('updatePortfolio')
+
+
+@socketio.on("updatePortfolio")
 def updatePortfolio(data):
     print(data)
     return up.getUserStockDataFromDB(data, db)
-    
-@socketio.on('updateCashBalance')
+
+
+@socketio.on("updateCashBalance")
 def updateCashBalance(data):
     print(data)
     return up.getCashBalance(data, db)
-    
-@socketio.on('updateLeaderBoard')
+
+
+@socketio.on("updateLeaderBoard")
 def updateLeaderBoard(data):
     print(data)
     return up.updateLeaderBoard(db)
-    
 
 
 @socketio.on("requestStockHistory")
@@ -99,37 +99,42 @@ def on_login(data):
     """Occurs when user logs in"""
     print("Something Happened")
     print(str(data))
-    print(data['currentUser'])
-    print(data['userRealName'])
-    if not validateEmail(data['currentUser']):
+    print(data["currentUser"])
+    print(data["userRealName"])
+    if not validateEmail(data["currentUser"]):
         return False
-    exists = bool(
-        models.USERS.query.filter_by(username=data['currentUser']).first())
+    exists = bool(models.USERS.query.filter_by(username=data["currentUser"]).first())
     if not exists:
         added = add_user(data["currentUser"])
         print("Added a new user")
-    socketio.emit('login', {
-        'user': data['currentUser'],
-        'name': data['userRealName'],
-        'image': data['userImageUrl']
-    },
-                  broadcast=True,
-                  include_self=True)
+    socketio.emit(
+        "login",
+        {
+            "user": data["currentUser"],
+            "name": data["userRealName"],
+            "image": data["userImageUrl"],
+        },
+        broadcast=True,
+        include_self=True,
+    )
     return True
 
+
 def validateEmail(email):
-    if "@" in email: return True
+    if "@" in email:
+        return True
     return False
 
-@socketio.on('logout')
+
+@socketio.on("logout")
 def on_logout(data):
     """Occurs when user logs out"""
-    socketio.emit('logout', {
-        'user': data['currentUser'],
-        'name': data['userRealName']
-    },
-                  broadcast=True,
-                  include_self=True)
+    socketio.emit(
+        "logout",
+        {"user": data["currentUser"], "name": data["userRealName"]},
+        broadcast=True,
+        include_self=True,
+    )
 
 
 def add_user(user):
@@ -146,4 +151,3 @@ if __name__ == "__main__":
         host=os.getenv("IP", "0.0.0.0"),
         port=8081 if os.getenv("C9_PORT") else int(os.getenv("PORT", 8081)),
     )
-    
