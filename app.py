@@ -24,10 +24,7 @@ db.create_all()
 
 cors = CORS(APP, resources={r"/*": {"origins": "*"}})
 
-socketio = SocketIO(APP,
-                    cors_allowed_origins="*",
-                    json=json,
-                    manage_session=False)
+socketio = SocketIO(APP, cors_allowed_origins="*", json=json, manage_session=False)
 
 
 @APP.route("/", defaults={"filename": "index.html"})
@@ -66,13 +63,13 @@ def process_transaction(data):
     return stock_transaction.process_transaction_implementation(data, db)
 
 
-@socketio.on('updatePortfolio')
+@socketio.on("updatePortfolio")
 def updatePortfolio(data):
     print(data)
     return up.getUserStockDataFromDB(data, db)
 
 
-@socketio.on('updateCashBalance')
+@socketio.on("updateCashBalance")
 def updateCashBalance(data):
     print(data)
     return up.getCashBalance(data, db)
@@ -94,27 +91,28 @@ def on_searchTicker(data):
 @socketio.on("login")
 def on_login(data):
     """Occurs when user logs in"""
-    if not validateEmail(data['currentUser']):
+    if not validateEmail(data["currentUser"]):
         return {"error": "Invalid Email"}
     exists = bool(
-        db.session.query(
-            models.USERS).filter_by(username=data['currentUser']).first())
+        db.session.query(models.USERS).filter_by(username=data["currentUser"]).first()
+    )
     if not exists:
         added = add_user(data["currentUser"])
         print("Added a new user")
     # Implement Security Here. This could be a fake request
-    return {'user': data['currentUser'], 'name': data['userRealName']}
+    return {"user": data["currentUser"], "name": data["userRealName"]}
 
 
 def validateEmail(email):
-    if "@" in email: return True
+    if "@" in email:
+        return True
     return False
 
 
-@socketio.on('logout')
+@socketio.on("logout")
 def on_logout(data):
     """Occurs when user logs out"""
-    return {'user': data['currentUser'], 'name': data['userRealName']}
+    return {"user": data["currentUser"], "name": data["userRealName"]}
 
 
 def add_user(user):
@@ -130,4 +128,5 @@ if __name__ == "__main__":
         APP,
         host=os.getenv("IP", "0.0.0.0"),
         port=8081 if os.getenv("C9_PORT") else int(os.getenv("PORT", 8081)),
-        debug=True)
+        debug=True,
+    )
