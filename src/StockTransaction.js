@@ -1,10 +1,8 @@
 import React, { useRef, useState, useEffect } from 'react';
 import './StockTransaction.css';
 import PropTypes from 'prop-types';
-
+import { STOCK_TRANSACTION_MODES } from './StockSearch';
 import { socket } from './App'; // eslint-disable-line
-
-export const STOCK_TRANSACTION_MODES = { buy: 'Buy', sell: 'Sell' };
 
 const NOT_AVALIABLE_NUM_CONSTANT = -1;
 
@@ -14,7 +12,7 @@ export function StockTransaction({
   transactionMode,
   userId,
   tickerSymbol,
-  displayComponentFunc,
+  transactionModeFunc,
 }) {
   console.log('Hello');
   const [valueOfStock, updateStockValue] = useState(NOT_AVALIABLE_NUM_CONSTANT);
@@ -43,7 +41,7 @@ export function StockTransaction({
 
   // Close Button
   function requestComponentClose() {
-    displayComponentFunc(false);
+    transactionModeFunc(STOCK_TRANSACTION_MODES.viewingOnly);
   }
 
   // Stock Value
@@ -283,9 +281,11 @@ export function StockTransaction({
   );
 }
 
+export default StockTransaction;
+
 StockTransaction.propTypes = {
   transactionMode: PropTypes.string.isRequired,
   userId: PropTypes.number.isRequired,
   tickerSymbol: PropTypes.string.isRequired,
-  displayComponentFunc: PropTypes.func.isRequired,
+  transactionModeFunc: PropTypes.func.isRequired,
 };
