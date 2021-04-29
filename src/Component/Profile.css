@@ -7,11 +7,29 @@ tr:nth-child(even) {
 }
 
 .container{
-  display: flex;
-  width: 100%;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 10px;
+}
+
+@media (max-width: 1200px){
+  .container{
+   grid-template-columns: 1fr;
+  }
 }
 
 .startInvesting{
   text-align: center;
 }
 
+.userProfile{
+  width:100%;
+}
+
+.tablePortfolio{
+  margin-left:auto;
+}
+
+.tableLeaderBoard{
+  margin-left:auto;
+}
