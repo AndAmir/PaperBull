@@ -16,6 +16,7 @@ export function Login({ updateUser, updateName }) {
       (response) => {
         if ('error' in response) {
           console.log(`Error with Google Login(${response.error})`);
+          return;
         }
         updateUser(response.user);
         updateName(response.name);
