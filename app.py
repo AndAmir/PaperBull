@@ -93,24 +93,18 @@ def on_searchTicker(data):
 @socketio.on("login")
 def on_login(data):
     """Occurs when user logs in"""
-    print("Something Happened")
-    print(str(data))
-    print(data['currentUser'])
-    print(data['userRealName'])
     if not validateEmail(data['currentUser']):
-        return False
+        return {"error": "Invalid Email"}
     exists = bool(
         models.USERS.query.filter_by(username=data['currentUser']).first())
     if not exists:
         added = add_user(data["currentUser"])
         print("Added a new user")
-    socketio.emit('login', {
+    # Implement Security Here. This could be a fake request
+    return {
         'user': data['currentUser'],
         'name': data['userRealName']
-    },
-                  broadcast=True,
-                  include_self=True)
-    return True
+    }
 
 def validateEmail(email):
     if "@" in email: return True

@@ -16,7 +16,6 @@ export function StockTransaction({
   tickerSymbol,
   displayComponentFunc,
 }) {
-  console.log('Hello');
   const [valueOfStock, updateStockValue] = useState(NOT_AVALIABLE_NUM_CONSTANT);
   const [amountOfStockOwned, updateAmountOfStockOwned] = useState(
     NOT_AVALIABLE_NUM_CONSTANT,
