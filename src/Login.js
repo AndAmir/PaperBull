@@ -13,7 +13,7 @@ export function Login({ updateUser, updateName, setImageURL }) {
     const nameOfUser = res.profileObj.name;
     const profileImage = res.profileObj.imageUrl;
     socket.emit('login',
-      { currentUser: userEmail, userRealName: nameOfUser, userImageUrl: profileImage},
+      { currentUser: userEmail, userRealName: nameOfUser, userImageUrl: profileImage },
       (response) => {
         if ('error' in response) {
           console.log(`Error with Google Login(${response.error})`);

@@ -20,7 +20,7 @@ function App() {
           <Login
             updateUser={updateUser}
             updateName={updateName}
-            setImageURL={setImageURL} 
+            setImageURL={setImageURL}
           />
         </div>
       </div>
