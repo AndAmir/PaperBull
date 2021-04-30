@@ -2,7 +2,9 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import './UserProfile.css';
 import { Logout } from '../Logout'; // eslint-disable-line
-function UserProfile({ userName, totalAssetsOwned, cashBal }) {
+function UserProfile({
+  userImage, userName, totalAssetsOwned, cashBal,
+}) {
   const DEFUALT_STARTING_AMOUNT = 10000;
 
   function getPercentChange() {
@@ -18,28 +20,27 @@ function UserProfile({ userName, totalAssetsOwned, cashBal }) {
   return (
     <div className="userProfileHeader">
       <div className="profileImage">
-        <img src="https://bit.ly/3tzk13c" alt="" />
+        <img src={userImage} alt="" className="userImage" />
       </div>
       <div className="profileName">
         <p>{userName}</p>
-
       </div>
       <div className="userBalance">
-        <h4>
-          {' '}
+        <div>
+          <Logout />
+        </div>
+        <p>
           Total Assets: $
           {getTotalAssets()}
-          {' '}
           (
           {getPercentChange()}
           %)
-          {' '}
-        </h4>
-        <h4>
+        </p>
+        <p>
           {' '}
           Cash Balance: $
           {cashBal.toFixed(2)}
-        </h4>
+        </p>
       </div>
     </div>
   );
@@ -47,6 +48,7 @@ function UserProfile({ userName, totalAssetsOwned, cashBal }) {
 
 export default UserProfile;
 UserProfile.propTypes = {
+  userImage: PropTypes.string.isRequired,
   userName: PropTypes.string.isRequired,
   totalAssetsOwned: PropTypes.number.isRequired,
   cashBal: PropTypes.number.isRequired,

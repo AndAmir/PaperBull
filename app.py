@@ -74,6 +74,11 @@ def updateCashBalance(data):
     print(data)
     return up.getCashBalance(data, db)
 
+@socketio.on("updateLeaderBoard")
+def updateLeaderBoard(data):
+    print(data)
+    return up.updateLeaderBoard(db)
+
 
 @socketio.on("requestStockHistory")
 def processStockHistory(data):
@@ -100,7 +105,7 @@ def on_login(data):
         added = add_user(data["currentUser"])
         print("Added a new user")
     # Implement Security Here. This could be a fake request
-    return {"user": data["currentUser"], "name": data["userRealName"]}
+    return {"user": data["currentUser"], "name": data["userRealName"], "image": data["userImageUrl"]}
 
 
 def validateEmail(email):

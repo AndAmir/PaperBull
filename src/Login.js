@@ -6,13 +6,14 @@ import { socket } from './App';// eslint-disable-line
 const { NODE_ENV } = process.env;
 const clientID = NODE_ENV === 'production' ? window.API_URL : process.env.REACT_APP_GOOGLE_CLIENT;
 
-export function Login({ updateUser, updateName }) {
+export function Login({ updateUser, updateName, setImageURL }) {
   const onSuccess = (res) => {
     console.log('[Google Client Login] currentUser:', res.profileObj);
     const userEmail = res.profileObj.email;
     const nameOfUser = res.profileObj.name;
+    const profileImage = res.profileObj.imageUrl;
     socket.emit('login',
-      { currentUser: userEmail, userRealName: nameOfUser },
+      { currentUser: userEmail, userRealName: nameOfUser, userImageUrl: profileImage},
       (response) => {
         if ('error' in response) {
           console.log(`Error with Google Login(${response.error})`);
@@ -20,6 +21,7 @@ export function Login({ updateUser, updateName }) {
         }
         updateUser(response.user);
         updateName(response.name);
+        setImageURL(response.image);
       });
   };
   const onFailure = (res) => {
@@ -47,4 +49,5 @@ export default Login;
 Login.propTypes = {
   updateUser: PropTypes.func.isRequired,
   updateName: PropTypes.func.isRequired,
+  setImageURL: PropTypes.func.isRequired,
 };

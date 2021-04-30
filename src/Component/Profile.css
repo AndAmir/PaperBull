@@ -1,15 +1,44 @@
-table, 
-td {
-    border: 1px solid #333;
+table, th, td {
+  border: 1px solid black;
 }
 
-thead,
-tfoot {
-    background-color: #333;
-    color: #fff;
+tr:nth-child(even) {
+  background-color:rgb(130, 135, 136);
 }
 
-.profile{
+.container{
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 10px;
 }
 
+@media (max-width: 1200px){
+  .container{
+   grid-template-columns: 1fr;
+  }
+}
 
+.tableLeaderBoard{
+  margin: auto;
+}
+
+.tablePortfolio{
+  margin-left: auto;
+  margin-right: auto;
+}
+
+.startInvesting{
+  text-align: center;
+}
+
+.userProfile{
+  width:100%;
+}
+
+.tablePortfolio{
+  margin-left:auto;
+}
+
+.tableLeaderBoard{
+  margin-left:auto;
+}

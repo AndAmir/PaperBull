@@ -10,6 +10,7 @@ export const socket = io();
 function App() {
   const [thisUser, updateUser] = useState(''); // thisUser variable contains user email
   const [fullName, updateName] = useState(''); // fullName variable contains user's first and last name
+  const [imageURL, setImageURL] = useState('');
   if (thisUser === '') {
     return (
       <div className="wrapper-input">
@@ -19,6 +20,7 @@ function App() {
           <Login
             updateUser={updateUser}
             updateName={updateName}
+            setImageURL={setImageURL} 
           />
         </div>
       </div>
@@ -31,12 +33,14 @@ function App() {
         <Logout
           updateUser={updateUser}
           updateName={updateName}
+          setImageURL={setImageURL}
         />
       </div>
       <div className="wrapper">
         <Profile
-          userName={thisUser}
-          fullName={fullName}
+          userName={fullName}
+          userEmail={thisUser}
+          userImage={imageURL}
         />
       </div>
     </div>
