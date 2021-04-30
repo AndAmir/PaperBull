@@ -11,7 +11,7 @@ TRANSACTION_MODES = {"Buy", "Sell"}
 
 
 class ErrorMessages:
-    """ Client-Side friendly. Consider moving to JS """
+    """Client-Side friendly. Consider moving to JS"""
 
     INVALID_USER = "Invalid User"
     INVALID_REQUEST = "Invalid Request"

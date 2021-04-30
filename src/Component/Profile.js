@@ -7,19 +7,37 @@ import { StockSearch } from '../StockSearch';
 
 const socket = io();
 
-function Profile({ userName }) {
+function Profile({ userName, userEmail, userImage }) {
   const [showStockSearch, setShowStockSearch] = useState(false);
   const [refreshData, resetRefreshData] = useState(false);
-  const UPDATE_TABLE = 20;
+  const UPDATE_TABLE = 60;
   const [userPortfolio, setUserPortfolio] = useState({});
   const [userCashBalance, setUserCashBalance] = useState(0);
   const [userID, setUserID] = useState(0);
+  const [showLeaderBoard, setShowLeaderBoard] = useState(false);
+  const [gameLeaderBoard, setLeaderBoard] = useState([]);
+  const [showProfileTable, setshowProfileTable] = useState(false);
+  const [sortType, setSortType] = useState('asc');
 
   function goToInvestingPage() {
     if (showStockSearch) {
       setShowStockSearch(false);
     } else {
       setShowStockSearch(true);
+    }
+  }
+
+  function sortTable() {
+    if (sortType === 'asc') {
+      const leaderBoard = [...gameLeaderBoard];
+      leaderBoard.sort((a, b) => ((a.userCashBalance > b.userCashBalance) ? 1 : -1));
+      setLeaderBoard(leaderBoard);
+      setSortType('des');
+    } else {
+      const leaderBoard = [...gameLeaderBoard];
+      leaderBoard.sort((a, b) => ((a.userCashBalance < b.userCashBalance) ? 1 : -1));
+      setLeaderBoard(leaderBoard);
+      setSortType('asc');
     }
   }
 
@@ -31,10 +49,9 @@ function Profile({ userName }) {
 
   function countTotalAssetsOwned() {
     let totalAssetsOwned = 0;
-    // for (const [key] of Object.entries(userPortfolio)) {
-    //   totalAssetsOwned += (userPortfolio[key].quantity * userPortfolio[key].currentPrice);
-    // }
-    Object.keys(userPortfolio).forEach((key) => { totalAssetsOwned += (userPortfolio[key].quantity * userPortfolio[key].currentPrice); });
+    Object.keys(userPortfolio).forEach((key) => {
+      totalAssetsOwned += (userPortfolio[key].quantity * userPortfolio[key].currentPrice);
+    });
 
     totalAssetsOwned = totalAssetsOwned.toFixed(2);
     return totalAssetsOwned;
@@ -45,21 +62,24 @@ function Profile({ userName }) {
   }
 
   function updatePortfolioandCashBalance() {
-    socket.emit('updatePortfolio', { userName }, (response) => {
+    socket.emit('updatePortfolio', { userEmail }, (response) => {
       if (!('error' in response)) {
-        console.log(response);
         setUserPortfolio(response);
-      } else {
-        console.error("Couldn't get data from server", response.error);
+        setshowProfileTable(true);
       }
     });
 
-    socket.emit('updateCashBalance', { userName }, (response) => {
+    socket.emit('updateCashBalance', { userEmail }, (response) => {
       if (!(response.error)) {
         setUserCashBalance(response.cashBalance);
         setUserID(response.userId);
-      } else {
-        console.error("Couldn't get data from server", response.error);
+      }
+    });
+
+    socket.emit('updateLeaderBoard', { UPDATE_TABLE }, (response) => {
+      if (!('error' in response)) {
+        setLeaderBoard(response);
+        setShowLeaderBoard(true);
       }
     });
 
@@ -76,11 +96,14 @@ function Profile({ userName }) {
   }, [refreshData]);
 
   return (
-    <div className="Profile">
+    <div className="userProfile">
       <div>
-        <UserProfile userName={userName} totalAssetsOwned={countTotalAssetsOwned()} cashBal={userCashBalance} />
+        <UserProfile userImage={userImage} userName={userName} totalAssetsOwned={countTotalAssetsOwned()} cashBal={userCashBalance} />
       </div>
-      <div className="profile">
+      <div className="startInvesting">
+        <button className="startInvestingButton" type="submit" onClick={goToInvestingPage}> Let&apos;s Start Investing </button>
+      </div>
+      <div>
         {(showStockSearch) ? (
           <div>
             <StockSearch
@@ -89,77 +112,93 @@ function Profile({ userName }) {
             />
           </div>
         ) : (
-          <div>
-            <div className="userPortfolio">
-              <table>
-                <thead>
-                  <tr>
-                    <th colSpan="3">
-                      {' '}
-                      {userName}
-                      &apos; Investments
-                      {' '}
-                    </th>
-                  </tr>
-                </thead>
-                <tbody>
-                  <tr>
-                    <td> Stock </td>
-                    <td> Quantity </td>
-                    <td> Average Price </td>
-                    <td> Current Value </td>
-                    <td> Total Value </td>
-                    <td> Percent Change </td>
-
-                  </tr>
-                  {Object.keys(userPortfolio).map((key) => (
+          <div className="container">
+            <div className="tablePortfolio">
+              { showProfileTable ? (
+                <table>
+                  <thead>
                     <tr>
-                      <td>
-                        {' '}
-                        {key}
-                        {' '}
-                      </td>
-                      <td>
-                        {' '}
-                        {userPortfolio[key].quantity}
-                      </td>
-                      <td>
-                        {' '}
-                        {userPortfolio[key].averagePrice}
-                      </td>
-                      <td>
-                        {' '}
-                        {userPortfolio[key].currentPrice}
-                        {' '}
-                      </td>
-                      <td>
-                        {' '}
-                        {(userPortfolio[key].quantity * userPortfolio[key].currentPrice).toFixed(2)}
-                      </td>
-                      <td>
-                        {' '}
-                        {getPercentChange(userPortfolio[key].averagePrice, userPortfolio[key].currentPrice)}
-                        {' '}
-                        %
-                        {' '}
-                      </td>
-
+                      <th colSpan="6" className="header">
+                        {userName}
+                        &apos; Investments
+                      </th>
                     </tr>
-                  ))}
-                </tbody>
-              </table>
+                  </thead>
+                  <tbody>
+                    <tr>
+                      <td> Stock </td>
+                      <td> Qnty. </td>
+                      <td> Avg. </td>
+                      <td> Crnt. </td>
+                      <td> Total $</td>
+                      <td> Change</td>
+                    </tr>
+                    {Object.keys(userPortfolio).map((key) => (
+                      <tr>
+                        <td>
+                          {key}
+                        </td>
+                        <td>
+                          {userPortfolio[key].quantity}
+                        </td>
+                        <td>
+                          {userPortfolio[key].averagePrice.toFixed(2)}
+                        </td>
+                        <td>
+                          {userPortfolio[key].currentPrice.toFixed(2)}
+                        </td>
+                        <td>
+                          {(userPortfolio[key].quantity * userPortfolio[key].currentPrice).toFixed(2)}
+                        </td>
+                        <td>
+                          {getPercentChange(userPortfolio[key].averagePrice, userPortfolio[key].currentPrice)}
+                          %
+                        </td>
+                      </tr>
+                    ))}
+                  </tbody>
+                </table>
+              ) : (null) }
+            </div>
+            <div className="tableLeaderBoard">
+              {(showLeaderBoard) ? (
+                <table>
+                  <thead>
+                    <tr>
+                      <th onClick={sortTable} colSpan="2" className="header">
+                        LeaderBoard (Press to Sort)
+                      </th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <tr>
+                      <td> Name </td>
+                      <td> Total $ </td>
+                    </tr>
+                    {gameLeaderBoard.map((item) => (
+                      <tr>
+                        <td>
+                          {item.userName}
+                        </td>
+                        <td>
+                          {item.userCashBalance.toFixed(2)}
+                        </td>
+                      </tr>
+                    ))}
+                  </tbody>
+                </table>
+              ) : (null)}
             </div>
           </div>
         )}
-      </div>
-      <div className="startInvesting">
-        <button className="startInvestingButton" type="submit" onClick={goToInvestingPage}> Let&apos;s Start Investing </button>
       </div>
     </div>
   );
 }
 Profile.propTypes = {
   userName: PropTypes.string.isRequired,
+  userImage: PropTypes.string.isRequired,
+  userEmail: PropTypes.string.isRequired,
 };
 
 export default Profile;
