@@ -16,7 +16,7 @@ export function StockSearch(props) {
 
   function search() {
     setUserInput(inputTicker);
-    socket.emit('searchTicker', { ticker: inputTicker.current.value }); // TODO MUST FIX GETTING INPUT
+    socket.emit('searchTicker', { ticker: inputTicker.current.value.trim().toUpperCase() }); // TODO MUST FIX GETTING INPUT
   }
 
   return (
