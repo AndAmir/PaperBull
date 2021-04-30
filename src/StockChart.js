@@ -1,43 +1,44 @@
 import React, { useEffect, useState } from 'react';
+import PropTypes from 'prop-types';
 import CanvasJSReact from './lib/canvasjs.react';
 import { socket } from './App';// eslint-disable-line
 // var CanvasJSReact = require('./canvasjs.react');
 // const { CanvasJS } = CanvasJSReact;
 const { CanvasJSChart } = CanvasJSReact;
 
-export function StockChart() {
+export function StockChart({ userInputtedticker }) {
   const [ticker, setTicker] = useState('');
   const [stockHistory, setStockHistory] = useState([]);
   const [stockVolumeHistory, setStockVolumeHistory] = useState([]);
 
   // const [badTicker, setBadTicker] = useState(false);
-  console.log('IM IN STOCKCHART', ticker);
 
   useEffect(() => {
-    socket.on('changeStockHistoryChart', (data) => {
-      setTicker(data.ticker);
-      setStockHistory([]);
-      setStockVolumeHistory([]);
-      // setBadTicker(false);
-      console.log('GETTING HISTORY', data.ticker);
-      socket.emit('requestStockHistory', data.ticker, (response) => {
-        if (response == null) {
-          // setBadTicker(true);
-          setTicker('Invalid Ticker Symbol');
-        } else {
-          console.log('GOT RESPONSE', response);
-          Object.keys(response.final).forEach((date) => setStockHistory((prev) => [
-            ...prev,
-            { x: new Date(date), y: response.final[date] },
-          ]));
-          // Object.keys(response.volume).forEach(
-          //   (date) => setStockVolumeHistory((prev) => (
-          //     [...prev, { x: new Date(date), y: response.volume[date] }])),
-          // );
-        }
-      });
+    if (userInputtedticker === '') {
+      return;
+    }
+    setTicker(userInputtedticker);
+    setStockHistory([]);
+    setStockVolumeHistory([]);
+    // setBadTicker(false);
+    console.log('GETTING HISTORY', userInputtedticker);
+    socket.emit('requestStockHistory', userInputtedticker, (response) => {
+      if (response == null) {
+        // setBadTicker(true);
+        setTicker('Invalid Ticker Symbol');
+      } else {
+        console.log('GOT RESPONSE', response);
+        Object.keys(response.final).forEach((date) => setStockHistory((prev) => [
+          ...prev,
+          { x: new Date(date), y: response.final[date] },
+        ]));
+        // Object.keys(response.volume).forEach(
+        //   (date) => setStockVolumeHistory((prev) => (
+        //     [...prev, { x: new Date(date), y: response.volume[date] }])),
+        // );
+      }
     });
-  }, []);
+  }, [userInputtedticker]);
   const options = {
     theme: 'light2', // "light1", "light2", "dark1", "dark2"
     animationEnabled: true,
@@ -81,3 +82,7 @@ export function StockChart() {
   );
 }
 export default StockChart;
+
+StockChart.propTypes = {
+  userInputtedticker: PropTypes.string.isRequired,
+};

@@ -15,8 +15,7 @@ export function StockSearch(props) {
   const [transactionMode, setTransactionMode] = useState(STOCK_TRANSACTION_MODES.viewingOnly);
 
   function search() {
-    setUserInput(inputTicker);
-    socket.emit('searchTicker', { ticker: inputTicker.current.value.trim().toUpperCase() }); // TODO MUST FIX GETTING INPUT
+    setUserInput(inputTicker.current.value.trim().toUpperCase());
   }
 
   return (
@@ -35,7 +34,7 @@ export function StockSearch(props) {
         <h1>Enter a Ticker Symbol</h1>
       ) : (
         <div>
-          <StockChart ticker={inputTicker} />
+          <StockChart userInputtedticker={userInput} />
           {transactionMode !== STOCK_TRANSACTION_MODES.viewingOnly
               && (
               <div>
