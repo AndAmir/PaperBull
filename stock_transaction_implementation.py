@@ -9,6 +9,20 @@ import stockquotes
 
 TRANSACTION_MODES = {"Buy", "Sell"}
 
+class StockDataAccess:
+    ''' Local Cache Implementation ''' 
+    __single_instance = None
+    
+    def __init__(self):
+        if StockDataAccess.__single_instance != None:
+            raise Exception("Don't initialize StockDataAccess, use getInstance()")
+    
+    @staticmethod
+    def get_instance():
+        if StockDataAccess.__single_instance == None:
+            StockDataAccess.__single_instance = StockDataAccess()
+        return StockDataAccess.__single_instance
+
 
 class ErrorMessages:
     """Client-Side friendly. Consider moving to JS"""
