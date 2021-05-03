@@ -1,4 +1,4 @@
-import stock_transaction_implementation as stock_transaction
+import stock_transaction_implementation as stock_module
 import models
 
 # 'UBER': {'quantity': 10, 'averagePrice': 32.08, 'currentPrice' : 60},
@@ -20,7 +20,9 @@ def getUserStockDataFromDB(data, db):
         stock = tableData.ticker
         quantity = tableData.quantity
         averagePrice = tableData.avg_price
-        currentPrice = stock_transaction.helper_get_stock_price(stock)
+        currentPrice = stock_module.StockDataAccess.get_instance().get_stock_price(
+            stock
+        )
 
         # DICT TO STORE DATA LIKE: {'quantity': 10, 'averagePrice': 32.08, 'currentPrice' : 60}
         dataRes = dict()
@@ -82,7 +84,9 @@ def updateLeaderBoard(db):
         for allStocksOwned in stocksOwnedByUser:
             quantity = allStocksOwned.quantity
             stock = allStocksOwned.ticker
-            currentPrice = stock_transaction.helper_get_stock_price(stock)
+            currentPrice = stock_module.StockDataAccess.get_instance().get_stock_price(
+                stock
+            )
             totalAmount = quantity * currentPrice
             player["userCashBalance"] += totalAmount
         user = userName.split("@")
