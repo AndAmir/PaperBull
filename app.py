@@ -97,27 +97,20 @@ def on_searchTicker(data):
 @socketio.on("login")
 def on_login(data):
     """Occurs when user logs in"""
-    print("Something Happened")
-    print(str(data))
-    print(data["currentUser"])
-    print(data["userRealName"])
     if not validateEmail(data["currentUser"]):
-        return False
-    exists = bool(models.USERS.query.filter_by(username=data["currentUser"]).first())
+        return {"error": "Invalid Email"}
+    exists = bool(
+        db.session.query(models.USERS).filter_by(username=data["currentUser"]).first()
+    )
     if not exists:
         added = add_user(data["currentUser"])
         print("Added a new user")
-    socketio.emit(
-        "login",
-        {
-            "user": data["currentUser"],
-            "name": data["userRealName"],
-            "image": data["userImageUrl"],
-        },
-        broadcast=True,
-        include_self=True,
-    )
-    return True
+    # Implement Security Here. This could be a fake request
+    return {
+        "user": data["currentUser"],
+        "name": data["userRealName"],
+        "image": data["userImageUrl"],
+    }
 
 
 def validateEmail(email):
@@ -129,12 +122,7 @@ def validateEmail(email):
 @socketio.on("logout")
 def on_logout(data):
     """Occurs when user logs out"""
-    socketio.emit(
-        "logout",
-        {"user": data["currentUser"], "name": data["userRealName"]},
-        broadcast=True,
-        include_self=True,
-    )
+    return {"user": data["currentUser"], "name": data["userRealName"]}
 
 
 def add_user(user):
@@ -150,4 +138,5 @@ if __name__ == "__main__":
         APP,
         host=os.getenv("IP", "0.0.0.0"),
         port=8081 if os.getenv("C9_PORT") else int(os.getenv("PORT", 8081)),
+        debug=True,
     )
