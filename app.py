@@ -87,13 +87,6 @@ def processStockHistory(data):
     return stock_transaction.request_ticker_history({"ticker": data})
 
 
-@socketio.on("searchTicker")
-def on_searchTicker(data):
-    print("SEACHING TICKER")
-    ticker = data["ticker"]
-    socketio.emit("changeStockHistoryChart", {"ticker": ticker})
-
-
 @socketio.on("login")
 def on_login(data):
     """Occurs when user logs in"""

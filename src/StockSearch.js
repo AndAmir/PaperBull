@@ -2,29 +2,20 @@ import React, { useRef, useState } from 'react';
 import PropTypes from 'prop-types';
 import { socket } from './App';// eslint-disable-line
 import { StockChart } from './StockChart';// eslint-disable-line
-import { StockTransaction, STOCK_TRANSACTION_MODES } from './StockTransaction';// eslint-disable-line
+import { StockTransaction} from './StockTransaction';// eslint-disable-line
+
+export const STOCK_TRANSACTION_MODES = {
+  buy: 'Buy', sell: 'Sell', viewingOnly: 'ViewingOnly',
+};
 
 export function StockSearch(props) {
   const { userID } = props;
   const [userInput, setUserInput] = useState('');
   const inputTicker = useRef();
-  const [displayStockTransaction, setDisplayStockTransaction] = useState(false);
-  const [isBuy, setIsBuy] = useState(false);
-  const [isSell, setIsSell] = useState(false);
+  const [transactionMode, setTransactionMode] = useState(STOCK_TRANSACTION_MODES.viewingOnly);
 
   function search() {
-    setUserInput(inputTicker);
-    socket.emit('searchTicker', { ticker: inputTicker.current.value }); // TODO MUST FIX GETTING INPUT
-  }
-
-  function transaction(type) {
-    setDisplayStockTransaction(true);
-    if (type === 'buy') {
-      setIsBuy(true);
-    } else if (type === 'sell') {
-      setIsSell(true);
-    }
-    console.log('transaction', userID);
+    setUserInput(inputTicker.current.value.trim().toUpperCase());
   }
 
   return (
@@ -43,63 +34,55 @@ export function StockSearch(props) {
         <h1>Enter a Ticker Symbol</h1>
       ) : (
         <div>
-          {displayStockTransaction ? (
-            <div>
-              {isBuy && (
-              <>
-                <h1>Buy</h1>
+          <StockChart userInputtedticker={userInput} />
+          {transactionMode !== STOCK_TRANSACTION_MODES.viewingOnly
+              && (
+              <div>
                 <StockTransaction
-                  transactionMode={STOCK_TRANSACTION_MODES.buy}
+                  transactionMode={transactionMode}
                   userId={userID}
                   tickerSymbol={inputTicker.current.value}
-                  displayComponentFunc={setDisplayStockTransaction}
+                  transactionModeFunc={setTransactionMode}
                 />
-              </>
+              </div>
               )}
-              {isSell && (
-              <>
-                <h1>Sell</h1>
-                <StockTransaction
-                  transactionMode={STOCK_TRANSACTION_MODES.sell}
-                  userId={userID}
-                  tickerSymbol={inputTicker.current.value}
-                  displayComponentFunc={setDisplayStockTransaction}
-                />
-              </>
-              )}
-            </div>
-          ) : (
-            <StockChart ticker={inputTicker} />
-          )}
-
-          <div
-            onClick={() => {
-              transaction('buy');
-            }}
-            onKeyPress={(e) => e.key === 'Enter' && transaction('buy')}
-            id="buy"
-            role="button"
-            tabIndex={0}
-          >
-            <h1>BUY</h1>
-          </div>
-          <div
-            onClick={() => {
-              transaction('sell');
-            }}
-            onKeyPress={(e) => e.key === 'Enter' && transaction('sell')}
-            id="sell"
-            role="button"
-            tabIndex={0}
-          >
-            <h1>SELL</h1>
-          </div>
         </div>
+      )}
+      {transactionMode === STOCK_TRANSACTION_MODES.viewingOnly
+      && (
+      <div>
+        <div
+          onClick={() => {
+            setTransactionMode(STOCK_TRANSACTION_MODES.buy);
+          }}
+          onKeyPress={(e) => e.key === 'Enter'
+                && setTransactionMode(STOCK_TRANSACTION_MODES.buy)}
+          id="buy"
+          role="button"
+          tabIndex={0}
+        >
+          <h1>BUY</h1>
+        </div>
+        <div
+          onClick={() => {
+            setTransactionMode(STOCK_TRANSACTION_MODES.sell);
+          }}
+          onKeyPress={(e) => e.key === 'Enter'
+                && setTransactionMode(STOCK_TRANSACTION_MODES.sell)}
+          id="sell"
+          role="button"
+          tabIndex={0}
+        >
+          <h1>SELL</h1>
+        </div>
+      </div>
       )}
     </div>
   );
 }
+
 export default StockSearch;
+
 StockSearch.propTypes = {
   userID: PropTypes.number.isRequired,
 };
