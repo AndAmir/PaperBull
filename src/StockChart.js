@@ -6,7 +6,7 @@ import { socket } from './App';// eslint-disable-line
 // const { CanvasJS } = CanvasJSReact;
 const { CanvasJSChart } = CanvasJSReact;
 
-export function StockChart({ userInputtedticker }) {
+export function StockChart({ userInputtedticker, setValidityOfStock }) {
   const [ticker, setTicker] = useState('');
   const [stockHistory, setStockHistory] = useState([]);
   const [stockVolumeHistory, setStockVolumeHistory] = useState([]);
@@ -26,8 +26,10 @@ export function StockChart({ userInputtedticker }) {
       if (response == null) {
         // setBadTicker(true);
         setTicker('Invalid Ticker Symbol');
+        setValidityOfStock(false);
       } else {
         console.log('GOT RESPONSE', response);
+        setValidityOfStock(true);
         Object.keys(response.final).forEach((date) => setStockHistory((prev) => [
           ...prev,
           { x: new Date(date), y: response.final[date] },
@@ -85,4 +87,5 @@ export default StockChart;
 
 StockChart.propTypes = {
   userInputtedticker: PropTypes.string.isRequired,
+  setValidityOfStock: PropTypes.func.isRequired,
 };

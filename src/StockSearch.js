@@ -13,6 +13,7 @@ export function StockSearch(props) {
   const [userInput, setUserInput] = useState('');
   const inputTicker = useRef();
   const [transactionMode, setTransactionMode] = useState(STOCK_TRANSACTION_MODES.viewingOnly);
+  const [validStock, setValidityOfStock] = useState(false);
 
   function search() {
     setUserInput(inputTicker.current.value.trim().toUpperCase());
@@ -34,7 +35,10 @@ export function StockSearch(props) {
         <h1>Enter a Ticker Symbol</h1>
       ) : (
         <div>
-          <StockChart userInputtedticker={userInput} />
+          <StockChart
+            userInputtedticker={userInput}
+            setValidityOfStock={setValidityOfStock}
+          />
           {transactionMode !== STOCK_TRANSACTION_MODES.viewingOnly
               && (
               <div>
@@ -49,6 +53,7 @@ export function StockSearch(props) {
         </div>
       )}
       {transactionMode === STOCK_TRANSACTION_MODES.viewingOnly
+      && validStock === true
       && (
       <div>
         <div
