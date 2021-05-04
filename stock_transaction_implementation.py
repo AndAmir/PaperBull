@@ -17,7 +17,7 @@ class StockDataAccess:
     """Local Cache Implementation"""
 
     __single_instance = None
-    TTL_OF_STOCK_PRICES = 10
+    TTL_OF_STOCK_PRICES = 60
     TTL_OF_CHARTS = 1800
 
     def __init__(self):
@@ -30,7 +30,7 @@ class StockDataAccess:
             StockDataAccess.__single_instance = StockDataAccess()
         return StockDataAccess.__single_instance
 
-    @cached(cache=TTLCache(maxsize=1024, ttl=TTL_OF_STOCK_PRICES))
+    @cached(cache=TTLCache(maxsize=41666, ttl=TTL_OF_STOCK_PRICES))
     def get_stock_price(self, stock):
         try:
             return stockquotes.Stock(stock).current_price
