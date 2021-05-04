@@ -65,6 +65,7 @@ def helper_get_stock_price(stock):
     except stockquotes.StockDoesNotExistError:
         return None
 
+
 def fix_stock_formatting(stock):
     if stock == None:
         return None
