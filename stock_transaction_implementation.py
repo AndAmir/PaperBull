@@ -1,6 +1,8 @@
 import random
 import models
 import datetime
+import time
+from cachetools import cached, TTLCache
 
 now = lambda: datetime.datetime.now()
 
@@ -8,6 +10,38 @@ now = lambda: datetime.datetime.now()
 import stockquotes
 
 TRANSACTION_MODES = {"Buy", "Sell"}
+
+
+class StockDataAccess:
+    """Local Cache Implementation"""
+
+    __single_instance = None
+    TTL_OF_STOCK_PRICES = 10
+    TTL_OF_CHARTS = 1800
+
+    def __init__(self):
+        if StockDataAccess.__single_instance != None:
+            raise Exception("Don't initialize StockDataAccess, use getInstance()")
+
+    @staticmethod
+    def get_instance():
+        if StockDataAccess.__single_instance == None:
+            StockDataAccess.__single_instance = StockDataAccess()
+        return StockDataAccess.__single_instance
+
+    @cached(cache=TTLCache(maxsize=1024, ttl=TTL_OF_STOCK_PRICES))
+    def get_stock_price(self, stock):
+        try:
+            return stockquotes.Stock(stock).current_price
+        except stockquotes.StockDoesNotExistError:
+            return None
+
+    @cached(cache=TTLCache(maxsize=137, ttl=TTL_OF_CHARTS))
+    def get_stock_history(self, stock):
+        try:
+            return stockquotes.Stock(stock).historical
+        except stockquotes.StockDoesNotExistError:
+            return None
 
 
 class ErrorMessages:
@@ -24,6 +58,7 @@ class ErrorMessages:
 
 
 def helper_get_stock_price(stock):
+    """This method is depreciated use StockDataAccess"""
     try:
         return stockquotes.Stock(stock).current_price
     except stockquotes.StockDoesNotExistError:
@@ -36,7 +71,7 @@ def poll_stock_implementation(data, db):
     user_id_or_none = data.get("user_id", None)
     transaction_mode_or_none = data.get("transaction_mode", None)
 
-    stock_price_or_none = helper_get_stock_price(stock)
+    stock_price_or_none = StockDataAccess.get_instance().get_stock_price(stock)
 
     suggestive_max = 1000
 
@@ -122,7 +157,7 @@ def process_transaction_implementation(data, db):
         .first()
     )
 
-    price_of_stock_or_none = helper_get_stock_price(stock)
+    price_of_stock_or_none = StockDataAccess.get_instance().get_stock_price(stock)
     try:
         delta_of_transaction = price_of_stock_or_none * quantity
     except TypeError:
@@ -212,17 +247,14 @@ def process_transaction_implementation(data, db):
 
 
 def request_ticker_history(data):
-    print(data["ticker"])
     ticker = data["ticker"]
-    try:
-        stock = stockquotes.Stock(ticker)
-    except stockquotes.StockDoesNotExistError:
+    history_or_none = StockDataAccess.get_instance().get_stock_history(ticker)
+    if history_or_none == None:
         return None
-    history = stock.historical
     final = {}
     volume = {}
 
-    for i in history:
+    for i in history_or_none:
         date = i["date"].strftime("%Y-%m-%d")
         data = [i["open"], i["high"], i["low"], i["close"]]
         final[date] = data
