@@ -41,7 +41,7 @@ export function StockSearch(props) {
                 <StockTransaction
                   transactionMode={transactionMode}
                   userId={userID}
-                  tickerSymbol={inputTicker.current.value}
+                  tickerSymbol={inputTicker.current.value.trim().toUpperCase()}
                   transactionModeFunc={setTransactionMode}
                 />
               </div>

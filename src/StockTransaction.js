@@ -122,7 +122,7 @@ export function StockTransaction({
     socket.emit(
       'processTransaction',
       {
-        ticker_symbol: tickerSymbol,
+        ticker_symbol: tickerSymbol.trim().toUpperCase(),
         user_id: userId,
         quantity: quantityOfStocks,
         transaction_mode: transactionMode,

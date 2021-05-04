@@ -26,9 +26,6 @@ function UserProfile({
         <p>{userName}</p>
       </div>
       <div className="userBalance">
-        <div>
-          <Logout />
-        </div>
         <p>
           Total Assets: $
           {getTotalAssets()}
