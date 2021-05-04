@@ -3,8 +3,7 @@ import PropTypes from 'prop-types';
 import { GoogleLogout } from 'react-google-login';
 import { socket } from './App'; // eslint-disable-line
 
-const { NODE_ENV } = process.env;
-const clientID = NODE_ENV === 'production' ? window.API_URL : process.env.REACT_APP_GOOGLE_CLIENT;
+const clientID = process.env.REACT_APP_GOOGLE_CLIENT;
 
 export function Logout({ updateUser, updateName }) {
   const onSuccess = () => {

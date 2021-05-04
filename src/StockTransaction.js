@@ -130,10 +130,16 @@ export function StockTransaction({
       (response) => {
         changeProcessingTransaction(false);
         if ('error' in response) {
-          console.log(`Transaction Failed. Error(${response.error})`);
+          const errorMsg = `Transaction Failed. Error(${response.error})`;
+          console.log(errorMsg);
+          alert(errorMsg);
           return;
         }
 
+        const displayMessage = 'Transaction Successful\n'
+        + `New Balance: $${response.newBalance.toFixed(2)}\n`
+        + `New Stock Amount: ${response.newStockAmount}`;
+        alert(displayMessage);
         quantityOfStockInput.current.value = 0;
         updateQuantityOwned();
 
@@ -166,9 +172,10 @@ export function StockTransaction({
         if ('error' in response) {
           updateStockValue(NOT_AVALIABLE_NUM_CONSTANT);
           changeMax(0);
-          console.log(
-            `Couldn't get Stock Data From Server. Error(${response.error})`,
-          );
+          const errorMsg = `Couldn't get Stock Data From Server. Error(${response.error})`;
+          console.log(errorMsg);
+          alert(errorMsg);
+          requestComponentClose();
           return;
         }
 
