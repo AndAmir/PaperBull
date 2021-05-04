@@ -102,9 +102,11 @@ function Profile({ userName, userEmail, userImage }) {
             displayComponentFunc={setShowStockSearch}
             userID={userID}
           />
-          <button className="startInvestingButton" type="submit" onClick={goToInvestingPage}>
-            <h3>Back to Home</h3>
-          </button>
+          <div className="backHomeButton">
+            <button className="startInvestingButton" type="submit" onClick={goToInvestingPage}>
+              <h3>Back to Home</h3>
+            </button>
+          </div>
         </div>
       </>
     );

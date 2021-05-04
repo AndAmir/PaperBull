@@ -28,6 +28,7 @@ img{
 }
 
 .stats{
+    padding-top:20px;
     position: center;
     width: 100%;
     text-align: center;

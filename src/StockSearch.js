@@ -3,7 +3,7 @@ import PropTypes from 'prop-types';
 import { socket } from './App';// eslint-disable-line
 import { StockChart } from './StockChart';// eslint-disable-line
 import { StockTransaction} from './StockTransaction';// eslint-disable-line
-import './App.css';
+import './StockSearch.css';
 
 export const STOCK_TRANSACTION_MODES = {
   buy: 'Buy', sell: 'Sell', viewingOnly: 'ViewingOnly',
@@ -20,7 +20,7 @@ export function StockSearch(props) {
   }
 
   return (
-    <div>
+    <div className="searchContainer">
       {userInput === '' ? (
         <div>
           <h1>Enter a Ticker Symbol</h1>
@@ -41,7 +41,7 @@ export function StockSearch(props) {
               )}
         </div>
       )}
-      <div className="wrapper-input">
+      <div className="">
         <input
           type="text"
           ref={inputTicker}
