@@ -2,6 +2,7 @@ import random
 import models
 import datetime
 import time
+import string
 from cachetools import cached, TTLCache
 
 now = lambda: datetime.datetime.now()
@@ -64,10 +65,15 @@ def helper_get_stock_price(stock):
     except stockquotes.StockDoesNotExistError:
         return None
 
+def fix_stock_formatting(stock):
+    if stock == None:
+        return None
+    return stock.strip(string.whitespace).upper()
+
 
 def poll_stock_implementation(data, db):
     response = {}
-    stock = data["ticker_symbol"]
+    stock = fix_stock_formatting(data["ticker_symbol"])
     user_id_or_none = data.get("user_id", None)
     transaction_mode_or_none = data.get("transaction_mode", None)
 
@@ -118,7 +124,7 @@ def request_user_stock_info_implementation(data, db):
     response = {}
 
     user_id = int(data.get("user_id"))
-    stock = data.get("ticker_symbol")
+    stock = fix_stock_formatting(data.get("ticker_symbol"))
 
     db_user_stock_info = (
         db.session.query(models.STOCKS)
@@ -142,7 +148,7 @@ def process_transaction_implementation(data, db):
     # TODO: Add security when we have Google API Login
     user_id = int(data.get("user_id"))
     quantity = int(data.get("quantity", -1))
-    stock = data.get("ticker_symbol")
+    stock = fix_stock_formatting(data.get("ticker_symbol"))
     mode = data.get("transaction_mode")
 
     if quantity <= 0:
@@ -247,7 +253,7 @@ def process_transaction_implementation(data, db):
 
 
 def request_ticker_history(data):
-    ticker = data["ticker"]
+    ticker = fix_stock_formatting(data["ticker"])
     history_or_none = StockDataAccess.get_instance().get_stock_history(ticker)
     if history_or_none == None:
         return None
