@@ -4,7 +4,9 @@ import { GoogleLogin } from 'react-google-login';
 import { socket } from './App';// eslint-disable-line
 
 const { NODE_ENV } = process.env;
-const clientID = NODE_ENV.REACT_APP_GOOGLE_CLIENT;
+const clientID = NODE_ENV === 'production' ? window.API_URL : process.env.REACT_APP_GOOGLE_CLIENT;
+console.log(`NODE_ENV = ${NODE_ENV}`, window.API_URL, process.env.REACT_APP_GOOGLE_CLIENT);
+console.log(`ClientID:${clientID}`);
 
 export function Login({ updateUser, updateName, setImageURL }) {
   const onSuccess = (res) => {
