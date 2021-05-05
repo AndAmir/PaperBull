@@ -94,103 +94,113 @@ function Profile({ userName, userEmail, userImage }) {
   useEffect(() => {
     updatePortfolioandCashBalance();
   }, [refreshData]);
+  if (showStockSearch) {
+    return (
+      <>
+        <div>
+          <StockSearch
+            displayComponentFunc={setShowStockSearch}
+            userID={userID}
+          />
+          <div className="backHomeButton">
+            <button className="startInvestingButton" type="submit" onClick={goToInvestingPage}>
+              <h3>Back to Home</h3>
+            </button>
+          </div>
+        </div>
+      </>
+    );
+  }
 
   return (
     <div className="userProfile">
       <div>
         <UserProfile userImage={userImage} userName={userName} totalAssetsOwned={countTotalAssetsOwned()} cashBal={userCashBalance} />
       </div>
-      <div className="startInvesting">
-        <button className="startInvestingButton" type="submit" onClick={goToInvestingPage}> Let&apos;s Start Investing </button>
-      </div>
       <div>
-        {(showStockSearch) ? (
-          <div>
-            <StockSearch
-              displayComponentFunc={setShowStockSearch}
-              userID={userID}
-            />
+        <div className="container">
+          <div className="tablePortfolio">
+            { showProfileTable ? (
+              <table>
+                <thead>
+                  <tr>
+                    <th colSpan="6" className="header">
+                      {userName}
+                      &apos; Investments
+                    </th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr>
+                    <td> Stock </td>
+                    <td> Qnty. </td>
+                    <td> Avg. </td>
+                    <td> Crnt. </td>
+                    <td> Total $</td>
+                    <td> Change</td>
+                  </tr>
+                  {Object.keys(userPortfolio).map((key) => (
+                    <tr>
+                      <td>
+                        {key}
+                      </td>
+                      <td>
+                        {userPortfolio[key].quantity}
+                      </td>
+                      <td>
+                        {userPortfolio[key].averagePrice.toFixed(2)}
+                      </td>
+                      <td>
+                        {userPortfolio[key].currentPrice.toFixed(2)}
+                      </td>
+                      <td>
+                        {(userPortfolio[key].quantity * userPortfolio[key].currentPrice).toFixed(2)}
+                      </td>
+                      <td>
+                        {getPercentChange(userPortfolio[key].averagePrice, userPortfolio[key].currentPrice)}
+                        %
+                      </td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            ) : (null) }
           </div>
-        ) : (
-          <div className="container">
-            <div className="tablePortfolio">
-              { showProfileTable ? (
-                <table>
-                  <thead>
+          <div className="tableLeaderBoard">
+            {(showLeaderBoard) ? (
+              <table>
+                <thead>
+                  <tr>
+                    <th onClick={sortTable} colSpan="2" className="header">
+                      LeaderBoard (Press to Sort)
+                    </th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr>
+                    <td> Name </td>
+                    <td> Total $ </td>
+                  </tr>
+                  {gameLeaderBoard.map((item) => (
                     <tr>
-                      <th colSpan="6" className="header">
-                        {userName}
-                        &apos; Investments
-                      </th>
+                      <td>
+                        {item.userName}
+                      </td>
+                      <td>
+                        {item.userCashBalance.toFixed(2)}
+                      </td>
                     </tr>
-                  </thead>
-                  <tbody>
-                    <tr>
-                      <td> Stock </td>
-                      <td> Qnty. </td>
-                      <td> Avg. </td>
-                      <td> Crnt. </td>
-                      <td> Total $</td>
-                      <td> Change</td>
-                    </tr>
-                    {Object.keys(userPortfolio).map((key) => (
-                      <tr>
-                        <td>
-                          {key}
-                        </td>
-                        <td>
-                          {userPortfolio[key].quantity}
-                        </td>
-                        <td>
-                          {userPortfolio[key].averagePrice.toFixed(2)}
-                        </td>
-                        <td>
-                          {userPortfolio[key].currentPrice.toFixed(2)}
-                        </td>
-                        <td>
-                          {(userPortfolio[key].quantity * userPortfolio[key].currentPrice).toFixed(2)}
-                        </td>
-                        <td>
-                          {getPercentChange(userPortfolio[key].averagePrice, userPortfolio[key].currentPrice)}
-                          %
-                        </td>
-                      </tr>
-                    ))}
-                  </tbody>
-                </table>
-              ) : (null) }
-            </div>
-            <div className="tableLeaderBoard">
-              {(showLeaderBoard) ? (
-                <table>
-                  <thead>
-                    <tr>
-                      <th onClick={sortTable} colSpan="2" className="header">
-                        LeaderBoard (Press to Sort)
-                      </th>
-                    </tr>
-                  </thead>
-                  <tbody>
-                    <tr>
-                      <td> Name </td>
-                      <td> Total $ </td>
-                    </tr>
-                    {gameLeaderBoard.map((item) => (
-                      <tr>
-                        <td>
-                          {item.userName}
-                        </td>
-                        <td>
-                          {item.userCashBalance.toFixed(2)}
-                        </td>
-                      </tr>
-                    ))}
-                  </tbody>
-                </table>
-              ) : (null)}
-            </div>
+                  ))}
+                </tbody>
+              </table>
+            ) : (null)}
           </div>
-        )}
+        </div>
+      </div>
+      <div className="startInvesting">
+        <button className="startInvestingButton" type="submit" onClick={goToInvestingPage}>
+          <h3>Let&apos;s Start Investing</h3>
+        </button>
       </div>
     </div>
   );

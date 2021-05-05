@@ -16,7 +16,7 @@ function App() {
       <div className="wrapper-input">
         <div>
           <h1>Welcome to Paperbull</h1>
-          <h3>Sign in with google</h3>
+          <h3>Sign in with Google</h3>
           <Login
             updateUser={updateUser}
             updateName={updateName}
