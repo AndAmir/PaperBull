@@ -1,31 +1,36 @@
-.userProfileHeader{
-    width: 100%;
-    height: 400px;
-    background-color:rgb(130, 135, 136);
+.sticky {
+  position: fixed;
+  top: 0;
+  width: 100%;
+  padding-top: 0.7rem;
 }
+
 
 .profileImage{
     float:left;
-    width:33%;
-    height:400px;
-    
+    padding-left: 1.3rem;
+}
+img{
+    border-radius: 50%;
+    height: 3rem;
 }
 .profileName{
     float:left; 
-    width:33%;
-    height:400px;
+    padding-left: 1.3rem;
+    padding-top: 0.4rem;
+    width:27%;
     text-align: center;
 }
 
-.userBalance{
+.logout{
     float:right;
-    width:33%;
-    height:400px;
-    text-align: center;
+    padding-right: 2rem;
 }
 
-.userImage{
-    display: block;
-    margin: auto;
-    height: 100%;
+.stats{
+    padding-top:20px;
+    position: center;
+    width: 100%;
+    text-align: center;
+    
 }

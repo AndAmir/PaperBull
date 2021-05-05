@@ -3,6 +3,7 @@ import PropTypes from 'prop-types';
 import { socket } from './App';// eslint-disable-line
 import { StockChart } from './StockChart';// eslint-disable-line
 import { StockTransaction} from './StockTransaction';// eslint-disable-line
+import './StockSearch.css';
 
 export const STOCK_TRANSACTION_MODES = {
   buy: 'Buy', sell: 'Sell', viewingOnly: 'ViewingOnly',
@@ -20,19 +21,20 @@ export function StockSearch(props) {
   }
 
   return (
-    <div>
-      <input
-        type="text"
-        ref={inputTicker}
-        placeholder="Enter Ticker Symbol..."
-        onKeyPress={(e) => e.key === 'Enter' && search()}
-        id="ticker_search"
-        required
-      />
-
+    <div className="chart">
       {/* <h1>{userInput}</h1> */}
       {userInput === '' ? (
-        <h1>Enter a Ticker Symbol</h1>
+        <>
+          <h1>Enter a Ticker Symbol</h1>
+          <input
+            type="text"
+            ref={inputTicker}
+            placeholder="Enter Ticker Symbol..."
+            onKeyPress={(e) => e.key === 'Enter' && search()}
+            id="ticker_search"
+            required
+          />
+        </>
       ) : (
         <div>
           <StockChart
@@ -45,7 +47,7 @@ export function StockSearch(props) {
                 <StockTransaction
                   transactionMode={transactionMode}
                   userId={userID}
-                  tickerSymbol={inputTicker.current.value.trim().toUpperCase()}
+                  tickerSymbol={userInput}
                   transactionModeFunc={setTransactionMode}
                 />
               </div>

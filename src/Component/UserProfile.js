@@ -18,28 +18,32 @@ function UserProfile({
     return amountChange.toFixed(2);
   }
   return (
-    <div className="userProfileHeader">
-      <div className="profileImage">
-        <img src={userImage} alt="" className="userImage" />
+    <>
+      <div className="userProfileHeader sticky">
+        <div className="profileImage">
+          <img src={userImage} alt="" className="userImage" />
+        </div>
+        <div className="profileName">
+          {userName}
+        </div>
       </div>
-      <div className="profileName">
-        <p>{userName}</p>
+      <div className="stats">
+        <div className="userBalance">
+          <p>
+            Total Assets: $
+            {getTotalAssets()}
+            (
+            {getPercentChange()}
+            %)
+          </p>
+          <p>
+            {' '}
+            Cash Balance: $
+            {cashBal.toFixed(2)}
+          </p>
+        </div>
       </div>
-      <div className="userBalance">
-        <p>
-          Total Assets: $
-          {getTotalAssets()}
-          (
-          {getPercentChange()}
-          %)
-        </p>
-        <p>
-          {' '}
-          Cash Balance: $
-          {cashBal.toFixed(2)}
-        </p>
-      </div>
-    </div>
+    </>
   );
 }
 
