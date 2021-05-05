@@ -90,7 +90,7 @@ def poll_stock_implementation(data, db):
     response["remaining_balance"] = 10000
     if user_id_or_none is not None and transaction_mode_or_none is not None:
         try:
-            if transaction_mode_or_none == "Buy" or transaction_mode_or_none == "Sell" :
+            if transaction_mode_or_none == "Buy" or transaction_mode_or_none == "Sell":
                 response["remaining_balance"] = min(
                     db.session.query(models.USERS)
                     .filter_by(username_id=user_id_or_none)
