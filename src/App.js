@@ -16,15 +16,17 @@ function App() {
       <div className="wrapper-input">
         <div>
           <div>
-            <div id="welcome"><h1>Welcome to Paperbull</h1></div>
-            {/* <h3>Sign in with google</h3> */}
-            <div id="login">
-              <Login
-                updateUser={updateUser}
-                updateName={updateName}
-                setImageURL={setImageURL}
-              />
+            <div id="welcome">
+              <h1>Welcome to Paperbull</h1>
+              <div id="login">
+                <Login
+                  updateUser={updateUser}
+                  updateName={updateName}
+                  setImageURL={setImageURL}
+                />
+              </div>
             </div>
+            {/* <h3>Sign in with google</h3> */}
           </div>
           <div className="containers">
             <h3>What is PaperBull?</h3>

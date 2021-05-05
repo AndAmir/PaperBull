@@ -32,7 +32,7 @@ body{
 
 .wrapper-input {
   margin: auto;
-  width: 100%;
+  width: 90%;
   padding: 10px;
   background-color: #282c34;
   /*min-height: 100vh;*/
@@ -42,7 +42,6 @@ body{
   font-size: calc(10px + 2vmin);
   color: white;
   height:100%;
-  margin-top:15%;
 }
 
 /*.wrapper-input input {*/
@@ -75,15 +74,17 @@ body{
 
 #dev{
   margin: auto;
-  padding: 5%;
+  padding: 3%;
   color: #fff;
 }
 
-#login{
-  float:right;
+/*#login{*/
+/*  float:right;*/
+/*}*/
+
+#welcome, #login{
+  width:fit-content;
+  margin: auto;
 }
 
-#welcome{
-  margin:
-  float:left;
-}
+
