@@ -61,7 +61,7 @@ export function StockTransaction({
   }`;
 
   // Stock Quantity Selection
-  const amountofStockPrompStr = `Quantity of stock to ${transactionMode.toLowerCase()} (Current Balance: $${userBalance})`;
+  const amountofStockPrompStr = `Quantity of stock to ${transactionMode.toLowerCase()} (Current Balance: $${userBalance.toFixed(2)})`;
 
   const quantityOfStockInput = useRef(null);
 
