@@ -1,4 +1,4 @@
-`https://tranquil-beach-81072.herokuapp.com/`
+`https://paperbull.herokuapp.com/`
 
 # Paperbull
 
