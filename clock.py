@@ -88,7 +88,7 @@ def timed_job():
             SendText.massText(
                 warnNumbers,
                 "PaperBull Notification",
-                f"{stock} has had a significant change, you should look into it!",
+                f"{stock} has had a significant change, you should look into it! https://paperbull.herokuapp.com/",
             )
 
 
