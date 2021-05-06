@@ -34,7 +34,7 @@ function App() {
           </div>
           <div className="containers">
             <h3>Lets Get Started!</h3>
-            <p>PaperBull is very simple to use. Login with your google account. You will see your Portfolio, which shows information about your investments and a leaderboard of all Paperbull users. To buy or sell a stock, click the &quot;Let&apos;s Start Investing&quot; button. Enter the ticker symbol of a stock to few its 6 month price history, you can then buy or sell the stock. You start with $10,000 Have Fun Investing!</p>
+            <p>PaperBull is very simple to use. Login with your google account. You will see your Portfolio, which shows information about your investments and a leaderboard of all Paperbull users. To buy or sell a stock, click the &quot;Let&apos;s Start Investing&quot; button. Enter the ticker symbol of a stock to few its 6 month price history, you can then buy or sell the stock. You start with $10,000. Have Fun Investing!</p>
           </div>
           <div className="containers">
             <h3>Our Inspiration</h3>
