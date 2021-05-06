@@ -25,6 +25,8 @@ export function StockTransaction({
   // TODO: Implement this
   const [maxStockInTransaction, changeMax] = useState(0);
 
+  const [userBalance, changeBalance] = useState(0);
+
   const [pollTick, pollTickUpdater] = useState(false);
 
   const [quantityOfStocks, changeQuanityOfStocks] = useState(0);
@@ -59,7 +61,7 @@ export function StockTransaction({
   }`;
 
   // Stock Quantity Selection
-  const amountofStockPrompStr = `Quantity of stock to ${transactionMode.toLowerCase()}`;
+  const amountofStockPrompStr = `Quantity of stock to ${transactionMode.toLowerCase()} (Current Balance: $${userBalance.toFixed(2)})`;
 
   const quantityOfStockInput = useRef(null);
 
@@ -181,6 +183,7 @@ export function StockTransaction({
 
         updateStockValue(response[tickerSymbol]);
         changeMax(response.suggestive_max);
+        changeBalance(response.remaining_balance);
       },
     );
 

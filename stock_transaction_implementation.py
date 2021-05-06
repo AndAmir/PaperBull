@@ -87,6 +87,30 @@ def poll_stock_implementation(data, db):
     else:
         response["error"] = ErrorMessages.INVALID_STOCK
         return response
+    response["remaining_balance"] = 10000
+    if user_id_or_none is not None and transaction_mode_or_none is not None:
+        try:
+            if transaction_mode_or_none == "Buy" or transaction_mode_or_none == "Sell":
+                response["remaining_balance"] = min(
+                    db.session.query(models.USERS)
+                    .filter_by(username_id=user_id_or_none)
+                    .first()
+                    .cash_balance,
+                    response["remaining_balance"],
+                )
+            else:
+                user_stock_info = (
+                    db.session.query(models.STOCKS)
+                    .filter_by(username_id=user_id_or_none)
+                    .filter_by(ticker=stock)
+                    .first()
+                )
+                if user_stock_info == None:
+                    response["remaining_balance"] = 0
+                else:
+                    response["remaining_balance"] = user_stock_info.quantity
+        except:
+            pass
 
     # This calculation is not important and may be inaccurate
     # Since this calculation is not important I will do it in less lines for speed
